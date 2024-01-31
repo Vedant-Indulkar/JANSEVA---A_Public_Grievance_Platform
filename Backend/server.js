@@ -1,0 +1,53 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const complaintRoutes = require('./routes/complaints');
+const userRoutes = require('./routes/user');
+
+
+//express app
+const app = express();
+
+
+//middleware
+app.use(express.json())
+
+app.use((req,res, next) => {
+    console.log(req.path, req.method);
+    next();
+})
+
+//db connection
+const dbURI='mongodb+srv://aditichavan118:aditi11@janseva-db.ayc1eiq.mongodb.net/ComplaintPlatform?retryWrites=true&w=majority'
+
+mongoose.connect(dbURI)
+  .then(result => app.listen(4000, () => {
+    console.log('connected to db and listening to port 4000');
+  }))
+  .catch(err => console.log(err));
+
+//route for homepage
+app.get('/', (req, res) => {
+    res.send('Hello')
+});
+
+//complaints route
+app.use('/complaints', complaintRoutes);
+
+//user routes
+app.use('/user', userRoutes);
+
+
+
+
+
+ 
+
+app.get('/complaints/:id' , )
+
+
+
+
+//listen for port
+// app.listen(4000, () => {
+//     console.log("listening to port 4000");
+// })
