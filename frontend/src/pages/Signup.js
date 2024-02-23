@@ -1,0 +1,74 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container, Form, Button } from 'react-bootstrap';
+import Navbar from "../components/Navbar"; 
+
+import { useSignup } from "../hooks/useSignup"
+
+
+export default function Signup(){
+
+    const navigate = useNavigate();
+
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const {signup, error, isLoading} = useSignup()
+
+    const handleSignup = async (event) => {
+        event.preventDefault();
+    
+        await signup(email, password)
+        
+
+
+    
+        
+        // alert('Signup successful.');
+        // Switch back to login form after successful signup
+      };
+
+      return (
+        <>
+          <Navbar />
+          <Container className="mt-5">
+            <div className="w-50 mx-auto">
+    
+            <Form onSubmit={handleSignup}>
+              <h3 className="text-center mb-4"><u>Sign Up</u></h3>
+              <Form.Group className="mb-3">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Choose a password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Button variant="dark" type="submit">Sign Up</Button>
+            </Form>
+
+                <div className="text-center mt-3">
+                    <Button disabled={isLoading} variant="link" onClick={() => navigate('/Login')} className='text-black'>
+                    { 'Already have an account? Log in' }
+                    </Button>
+                    {error && <div className="error">{error}</div>}
+
+                </div>
+            </div>
+        </Container>
+        </>
+    );
+}
+

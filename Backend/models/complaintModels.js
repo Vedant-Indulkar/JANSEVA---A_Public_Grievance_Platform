@@ -24,11 +24,17 @@ const complaintsSchema = new Schema({
     },
 
     image_url : {
-        type: String,
-        required: true
+        type: String
+        
     },
 
     location : {
+        type: String,
+        required: true
+        
+    },
+
+    user_id : {
         type: String,
         required: true
     }

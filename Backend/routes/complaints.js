@@ -7,7 +7,13 @@ const {
     updateComplaint
 } = require('../controllers/complaintController')
 
+const requireAuth = require('../middleware/requireAuth')
+
 const router = express.Router();
+
+
+//require auth for all complaints routes
+router.use(requireAuth)
 
 
 
