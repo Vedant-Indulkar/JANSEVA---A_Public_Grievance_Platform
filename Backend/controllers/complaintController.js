@@ -1,5 +1,17 @@
 const Complaint = require('../models/complaintModels');
+const {uploadOnCloudinary} = require('../utils/cloudinary') 
 const mongoose = require('mongoose')
+
+
+//get all complaints admin
+const getComplaintsAdmin = async (req, res) => {
+    
+
+    const complaints = await Complaint.find().sort({createdAt: -1})
+
+    res.status(200).json(complaints)
+}
+
 
 //get all complaints
 const getComplaints = async (req, res) => {
@@ -25,13 +37,25 @@ const getComplaint =  async (req , res) => {
 
 //create new complaint
 const createComplaint = async (req, res) => {
-    const {category, sub_category, description, ward_no, image_url, location} = req.body
+    const {category, sub_category, description, ward_no,  location} = req.body
 
+    const image_urlLocalPath = req.files?.image_url[0]?.path;
+
+    const image_url = await uploadOnCloudinary(image_urlLocalPath)
 
     //add doc to db
     try{
         const user_id = req.user._id
-        const complaint = await Complaint.create({category, sub_category, description, ward_no, image_url, location, user_id}) 
+        const complaint = await Complaint.create(
+            {category, 
+            sub_category, 
+            description, 
+            ward_no, 
+            image_url : image_url?.url || "", 
+            location, 
+            user_id}
+            ) 
+       
         res.status(200).json(complaint)
     }catch(error) {
         res.status(400).json({error: error.message})
@@ -76,5 +100,6 @@ module.exports = {
     getComplaints,
     getComplaint,
     deleteComplaint,
-    updateComplaint
+    updateComplaint,
+    getComplaintsAdmin
 }

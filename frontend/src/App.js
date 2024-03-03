@@ -6,6 +6,7 @@ import Profile from './pages/Profile';
 import Complaintform from './pages/Complaintform';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AdminPage from './pages/AdminPage';
 
 function App() {
 
@@ -20,6 +21,11 @@ function App() {
         <Route path="/Complaintform" element={user ? <Complaintform/> : <Navigate to='/login' /> }/>
         <Route path= "/login" element={!user ? <Login/> : <Navigate to='/complaintform'></Navigate>} />
         <Route path= "/signup" element={ !user ? <Signup/> : <Navigate to='/complaintform'></Navigate> } />
+
+
+        
+        <Route path="/admin" element={<AdminPage /> } />
+      
        
         {/* <Route actualpath= "Complaintdetails" element={<Complaintdetails/>}/> */}
       </Routes>

@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const complaintRoutes = require('./routes/complaints');
 const userRoutes = require('./routes/user');
+const cors = require('cors');
 
 
 //express app
@@ -10,6 +11,7 @@ const app = express();
 
 //middleware
 app.use(express.json())
+app.use(cors())
 
 app.use((req,res, next) => {
     console.log(req.path, req.method);
@@ -42,7 +44,7 @@ app.use('/user', userRoutes);
 
  
 
-app.get('/complaints/:id' , )
+
 
 
 

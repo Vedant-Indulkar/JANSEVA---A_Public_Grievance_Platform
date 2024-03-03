@@ -39,7 +39,7 @@ const Profile = () => {
       <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center">
           <h2>Welcome to the Dashboard</h2>
-          <button className="btn btn-danger"  onClick={handleLogout}>Logout</button>
+          
         </div>
     <div className="complaintlist">
       
