@@ -3,6 +3,7 @@ import { Nav, Container, NavDropdown, Navbar, Button } from "react-bootstrap";
 import { useNavigate, Link} from 'react-router-dom'; // Import Link
 import { useLogout } from '../hooks/useLogout'
 import { useAuthContext } from '../hooks/useAuthContext'
+import Home from "./Home";
 
 
 export default function CustomNavbar() {
@@ -13,7 +14,7 @@ export default function CustomNavbar() {
 
   const handleClick = () => {
     logout()
-    
+    navigate("/")
   }
 
 
@@ -56,8 +57,8 @@ export default function CustomNavbar() {
         <Nav className="ms-auto align-items-center">
         {user && (
             <div>
-              <span>{user.email}</span>
-              <Button  onClick={handleClick} variant="outline-dark"> Log out </Button>
+              <span> <strong>Hello! {user.email}</strong></span>
+              <Button  onClick={handleClick} variant="danger" className="mx-2"> Log out </Button>
             </div>
           )}
         

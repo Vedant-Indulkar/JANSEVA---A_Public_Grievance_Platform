@@ -191,7 +191,7 @@ const Complaintform = () => {
           <input
             type="file"
             id="image"
-            name="image_url"
+            name="image"
             accept="image/*"
             onChange={(e) => setImage(e.target.value)} 
             className="form-control"

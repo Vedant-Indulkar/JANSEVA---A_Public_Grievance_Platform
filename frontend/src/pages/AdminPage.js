@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
 
 const AdminPage = () => {
-  const { user } = useAuthContext()
   const [complaints, setComplaints] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -32,18 +30,23 @@ const AdminPage = () => {
 
   const handleStatusChange = async (complaintId, newStatus) => {
     try {
-      const response = await axios.put(`/complaints/${complaintId}/status`, {
-        status: newStatus,
+      const response = await fetch(`/complaints/${complaintId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
       });
-      if (response.status === 200) {
-        setComplaints(
-          complaints.map((complaint) => {
-            if (complaint.id === complaintId) {
-              return { ...complaint, status: newStatus };
-            }
-            return complaint;
-          })
+      if (response.ok) {
+        setComplaints((prevComplaints) =>
+          prevComplaints.map((complaint) =>
+            complaint.id === complaintId
+              ? { ...complaint, status: newStatus }
+              : complaint
+          )
         );
+      } else {
+        throw new Error("Failed to update status");
       }
     } catch (error) {
       console.error("Error updating status:", error);
@@ -54,12 +57,91 @@ const AdminPage = () => {
     alert(description);
   };
 
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  const renderComplaintsByCategory = () => {
+    return (
+      <>
+        {selectedCategory && (
+          <tr className="table-active">
+            <td colSpan="8">
+              <strong>{selectedCategory} Complaints</strong>
+            </td>
+          </tr>
+        )}
+        {complaints
+          .filter((complaint) =>
+            complaint.category.toLowerCase().includes(selectedCategory.toLowerCase())
+          )
+          .map((complaint, index) => (
+            <tr key={complaint.id}>
+              <td>{index + 1}</td>
+              <td>{complaint.priority}</td>
+              <td>{complaint.category}</td>
+              <td>{complaint.sub_category}</td>
+              <td>
+                <div className="d-flex align-items-center">
+                  <div style={{ flex: 1 }}>
+                    {complaint.description.length > 50 ? (
+                      <>
+                        {complaint.description.substring(0, 50)}...
+                        <button
+                          className="btn btn-link"
+                          onClick={() =>
+                            showFullDescription(complaint.description)
+                          }
+                        >
+                          See More
+                        </button>
+                      </>
+                    ) : (
+                      complaint.description
+                    )}
+                  </div>
+                </div>
+              </td>
+              <td>{complaint.ward_no}</td>
+              <td>{complaint.location}</td>
+              <td>
+                <select
+                  value={complaint.status}
+                  onChange={(e) =>
+                    handleStatusChange(complaint.id, e.target.value)
+                  }
+                >
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <button className="my-2 btn-primary">Submit</button>
+              </td>
+            </tr>
+          ))}
+      </>
+    );
+  };
+
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Navbar />
-      <div className="container mt-5">
+      <div className="container mt-5 flex-grow-1">
         <h2 className="mb-4"><strong>Welcome Admin!</strong></h2>
-        <div className="table-responsive">
+        <div className="mb-3">
+          <select
+            className="form-select"
+            aria-label="Select complaint category"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          >
+            <option value="">All Complaints</option>
+            <option value="Road">Road</option>
+            <option value="Electricity">Electricity</option>
+            <option value="Water">Water</option>
+            {/* Add more options as needed */}
+          </select>
+        </div>
+        <div className="table-responsive" style={{ maxHeight: "70vh", overflowY: "auto" }}>
           <table className="table table-bordered table-hover">
             <thead className="table-dark">
               <tr>
@@ -70,71 +152,17 @@ const AdminPage = () => {
                 <th>Description</th>
                 <th>Ward No.</th>
                 <th>Address</th>
-                <th>User Email</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
-           
-              {user.map((user) && complaints.map((complaint, index) => (
-                <tr
-                  key={complaint.id}
-                  className={getPriorityColor(complaint.priority)}
-                >
-                  <td>{index + 1}</td>
-                  <td>{complaint.priority}</td>
-                  <td>{complaint.category}</td>
-                  <td>{complaint.sub_category}</td>
-                  <td>
-                    <div className="d-flex align-items-center">
-                      <div style={{ flex: 1 }}>
-                        {complaint.description.length > 50 ? (
-                          <>
-                            {complaint.description.substring(0, 50)}...
-                            <button
-                              className="btn btn-link"
-                              onClick={() =>
-                                showFullDescription(complaint.description)
-                              }
-                            >
-                              See More
-                            </button>
-                          </>
-                        ) : (
-                          complaint.description
-                        )}
-                      </div>
-                    </div>
-                  </td>
-                  <td>{complaint.ward_no}</td>
-                  <td>{complaint.location}</td>
-                  <td>{user.email}</td>
-                
-                  <td>
-                    <select>
-                      <option value="pending">Pending</option>
-                      <option value="completed">Completed</option>
-                    </select>
-                  </td>
-                </tr>
-              )))}
+              {renderComplaintsByCategory()}
             </tbody>
           </table>
         </div>
       </div>
     </div>
   );
-};
-
-const getPriorityColor = (priority) => {
-  switch (priority) {
-    case "High":
-      return "table-danger";
-    case "Medium":
-      return "table-warning";
-    default:
-      return "";
-  }
 };
 
 export default AdminPage;
