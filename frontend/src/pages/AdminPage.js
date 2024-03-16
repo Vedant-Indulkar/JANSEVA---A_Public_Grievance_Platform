@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const AdminPage = () => {
   const [complaints, setComplaints] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -28,20 +29,20 @@ const AdminPage = () => {
     fetchComplaints();
   }, []);
 
-  const handleStatusChange = async (complaintId, newStatus) => {
+  const handleStatusChange = async (complaintId, newStatus, response) => {
     try {
       const response = await fetch(`/complaints/${complaintId}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ status: newStatus, response: response }),
       });
       if (response.ok) {
         setComplaints((prevComplaints) =>
           prevComplaints.map((complaint) =>
             complaint.id === complaintId
-              ? { ...complaint, status: newStatus }
+              ? { ...complaint, status: newStatus, response: response }
               : complaint
           )
         );
@@ -108,7 +109,7 @@ const AdminPage = () => {
                 <select
                   value={complaint.status}
                   onChange={(e) =>
-                    handleStatusChange(complaint.id, e.target.value)
+                    handleStatusChange(complaint.id, e.target.value, complaint.response)
                   }
                 >
                   <option value="pending">Pending</option>
@@ -125,7 +126,7 @@ const AdminPage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Navbar />
-      <div className="container mt-5 flex-grow-1">
+      <div className="container mt-2 mb-2 flex-grow-1">
         <h2 className="mb-4"><strong>Welcome Admin!</strong></h2>
         <div className="mb-3">
           <select
