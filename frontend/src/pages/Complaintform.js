@@ -35,7 +35,7 @@ const Complaintform = () => {
   const subCategoriesMap = {
     'Roads and Footpath': ['Damaged Road', 'Damaged Footpath', 'Damaged Road Divider', 'No marking on Bump', 'Marking no proper on Bump','Marking no proper on Zebra Crossing'],
     // 'Category 2': ['Subcategory 2.1', 'Subcategory 2.2', 'Subcategory 2.3'],
-    // 'Category 3': ['Subcategory 3.1', 'Subcategory 3.2', 'Subcategory 3.3'],
+    // 'Category 3': ['Subcategory 3.1', 'Subcategory 3.2', 'Subcategory 3.3'], Vedant
   };
   const wardNumbers = ['Ward 1', 'Ward 2', 'Ward 3'];
 
