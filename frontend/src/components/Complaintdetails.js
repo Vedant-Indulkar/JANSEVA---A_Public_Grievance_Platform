@@ -52,6 +52,9 @@ const Complaintdetails = ({ complaint, showAlert, handleCloseAlert, handleLogout
           <div>
             <strong>Address:</strong> {complaint.location}
           </div>
+          <div>
+            <strong>Image:</strong> <img src={complaint.image_url}></img>
+          </div>
         </div>
       </div>
     </div>
