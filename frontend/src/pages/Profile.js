@@ -14,7 +14,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchComplaints = async () => {
-      const response = await fetch("/complaints/all", {
+      const response = await fetch("http://localhost:4000/complaints/all", {
         headers: {
           'Authorization': `Bearer ${user.token}`
         },

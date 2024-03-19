@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const complaintRoutes = require('./routes/complaints');
 const userRoutes = require('./routes/user');
+const adminRoutes = require('./routes/admin');
 const cors = require('cors');
 
 //express app
@@ -36,6 +37,9 @@ app.get('/', (req, res) => {
 
 //complaints route
 app.use('/complaints', complaintRoutes);
+
+// admin routes
+app.use('/admin', adminRoutes);
 
 //user routes
 app.use('/user', userRoutes);

@@ -18,6 +18,8 @@ const Complaintform = () => {
   const [imageDataUri, setImageDataUri] = useState(null);
   const [ward_no, setWardNo] = useState("");
   const [location, setLocation] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [state, setState] = useState("");
   const [error, setError] = useState(null);
 
   // const [formData, setFormData] = useState({
@@ -61,6 +63,8 @@ const Complaintform = () => {
       ward_no,
       image_url: imageDataUri,
       location, // Include the address field
+      userEmail,
+      
     };
 
     const response = await fetch("/complaints", {
@@ -85,6 +89,8 @@ const Complaintform = () => {
       setWardNo("");
       setImageDataUri("");
       setLocation("");
+   
+      
       console.log("new complaint added:", json);
 
       dispatch({ type: "CREATE_WORKOUT", payload: json });
@@ -225,6 +231,19 @@ const Complaintform = () => {
               required
             ></textarea>
           </div>
+
+          {/* <div className="mb-3">
+            <label htmlFor="userEmail" className="form-label">
+              User Email:
+            </label>
+            <input 
+            type="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required/>
+          </div> */}
+
 
           {/* Submit button */}
           <button type="submit" className="btn btn-dark">

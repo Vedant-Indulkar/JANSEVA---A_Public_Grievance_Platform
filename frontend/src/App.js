@@ -17,6 +17,7 @@ import Complaintform from './pages/Complaintform';
 import Profile from './pages/Profile';
 import Signup from './pages/Signup';
 import AdminPage from './pages/AdminPage';
+import ComplaintsList from './pages/upvotepg';
 
 
 
@@ -33,14 +34,16 @@ function App() {
     <BrowserRouter>
     <Routes>
 
-    <Route  actual path="/"element={<Home/>}/>
-    <Route actual path="/AboutUs" element={<AboutUs/>}/>
-    <Route path="/profile" element={<Profile /> } />
-      
+      <Route  actual path="/"element={<Home/>}/>
+      <Route actual path="/AboutUs" element={<AboutUs/>}/>
+      <Route path="/profile" element={<Profile /> } />
+      <Route path="/upvote" element={<ComplaintsList/>}/>
+
       <Route path="/Complaintform" element={user ? <Complaintform/> : <Navigate to='/login' /> }/>
       <Route path= "/login" element={!user ? <Login/> : <Navigate to='/complaintform'></Navigate>} />
       <Route path= "/signup" element={ !user ? <Signup/> : <Navigate to='/complaintform'></Navigate> } />
       <Route actual path="/admin" element={<AdminPage/>}/>
+     
 
      
 
