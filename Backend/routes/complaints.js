@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-    getComplaintsAdmin,
+    upvoteComplaint,
     createComplaint,
     getComplaints,
     getComplaint,
@@ -8,18 +8,19 @@ const {
     updateComplaint
 } = require('../controllers/complaintController')
 
+
 const { upload }= require('../middleware/multer.middleware')
-const requireAuth = require('../middleware/requireAuth')
+const requireAuth = require('../middleware/requireAuth')    
 
 const router = express.Router();
 
-router.get('/admin/all', getComplaintsAdmin )
+
 
 
 //require auth for all complaints routes
 router.use(requireAuth)
 
-
+router.post('/upvote', upvoteComplaint)
 
 // GET the lodge  complaint page
 router.get('/', (req, res) => {
