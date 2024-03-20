@@ -35,8 +35,8 @@ export default function Login() {
             alert('Successfully logged in!');
             // Set email in local storage after successful login
             localStorage.setItem('loggedInUserEmail', email);
-            // Navigate to the Complaintform page
-            navigate('/Complaintform', { state: { email } });
+            // Navigate to the Complaint page
+           
         }
     };
 

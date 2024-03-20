@@ -79,5 +79,27 @@ html {
   background-position: center;
 } */
 
+.card-hover-gradient {
+  transition: background 0.3s ease-in-out, transform 0.3s ease-in-out; /* Add transform property */
+}
+
+.card-hover-gradient:hover {
+  background: linear-gradient(to top, #f2f2f2, #dcdcdc); /* Grey gradient with a touch of blue */
+  color: #000; /* Change text color to ensure readability */
+  transform: scale(1.05); /* Apply a slight zoom effect */
+}
+
+/* App.css */
+
+.images-section {
+  /* Add styles for images section */
+  /* You can adjust the height, width, and other properties as needed */
+  background-size: cover;
+  background-position: center;
+  height: 300px; /* Adjust height as needed */
+  width: 100%;
+}
+
+
 
 
