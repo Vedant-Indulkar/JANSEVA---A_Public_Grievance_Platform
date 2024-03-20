@@ -2,6 +2,14 @@ const Complaint = require("../models/complaintModels");
 const { uploadOnCloudinary } = require("../utils/cloudinary");
 const mongoose = require("mongoose");
 
+const getAllComplaints = async (req, res) => {
+  const complaints = await Complaint.find().sort({ createdAt: -1 }).populate('user_id');
+  console.log(complaints.length)
+  res.status(200).json(complaints);
+};
+
+
+
 const upvoteComplaint = async (req, res) => {
   const postId = req.body.postId;
   const userId = req.user._id;
@@ -119,5 +127,6 @@ module.exports = {
   getComplaint,
   deleteComplaint,
   updateComplaint,
-  upvoteComplaint
+  upvoteComplaint,
+  getAllComplaints
 };

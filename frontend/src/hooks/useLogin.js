@@ -31,7 +31,7 @@ export const useLogin = () => {
             localStorage.setItem('user', JSON.stringify(json));
             dispatch({type: 'LOGIN', payload: json});
             setIsLoading(false);
-
+            alert('Login Successful!')
             // Navigate to another route upon successful login. Adjust the path as needed.
             // navigate('/complaintform'); // Example: navigate to a 'dashboard' route
         } catch (error) {
