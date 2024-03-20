@@ -18,8 +18,7 @@ const Complaintform = () => {
   const [imageDataUri, setImageDataUri] = useState(null);
   const [ward_no, setWardNo] = useState("");
   const [location, setLocation] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [state, setState] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState(null);
 
   // const [formData, setFormData] = useState({
@@ -62,8 +61,9 @@ const Complaintform = () => {
       description,
       ward_no,
       image_url: imageDataUri,
+      phoneNumber,
       location, // Include the address field
-      userEmail,
+      
       
     };
 
@@ -88,6 +88,7 @@ const Complaintform = () => {
       setDescription("");
       setWardNo("");
       setImageDataUri("");
+      setPhoneNumber("");
       setLocation("");
    
       
@@ -231,19 +232,22 @@ const Complaintform = () => {
               required
             ></textarea>
           </div>
-
-          {/* <div className="mb-3">
-            <label htmlFor="userEmail" className="form-label">
-              User Email:
+          <div className="mb-3">
+            <label htmlFor="phoneNumber" className="form-label">
+              Phone Number:
             </label>
-            <input 
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required/>
-          </div> */}
-
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              className="form-control"
+              pattern="[0-9]{10}" // Ensure only numbers and length of 10
+              maxLength={10}
+              minLength={10}
+              required></input>
+          </div>
 
           {/* Submit button */}
           <button type="submit" className="btn btn-dark">

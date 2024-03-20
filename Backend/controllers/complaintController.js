@@ -55,7 +55,7 @@ const getComplaint = async (req, res) => {
 
 //create new complaint
 const createComplaint = async (req, res) => {
-  const { category, sub_category, description, ward_no, location, image_url } =
+  const { category, sub_category, description, ward_no, location, image_url, phoneNumber } =
     req.body;
 
   const image = await uploadOnCloudinary(image_url);
@@ -69,6 +69,7 @@ const createComplaint = async (req, res) => {
       description,
       ward_no,
       image_url: image.secure_url || "",
+      phoneNumber,
       location,
       user_id,
       // useremail

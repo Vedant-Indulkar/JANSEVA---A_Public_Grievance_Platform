@@ -32,6 +32,10 @@ const complaintsSchema = new Schema(
       type: String,
       required: true,
     },
+    phoneNumber : {
+      type: Number,
+      required: true
+    },
 
     user_id: { type: Schema.Types.ObjectId, ref: "User" },
 

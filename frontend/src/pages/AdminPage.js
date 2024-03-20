@@ -156,7 +156,9 @@ const AdminPage = () => {
           .map((complaint, index) => (
             <tr key={complaint.id}>
               <td>{index + 1}</td>
+             
               <td>{complaint.user_id.email}</td>
+              <td>{String(complaint.phoneNumber)}</td>
               <td>{complaint.priority}</td>
               <td>{complaint.category}</td>
               <td>{complaint.sub_category}</td>
@@ -302,7 +304,8 @@ const AdminPage = () => {
             <thead className="table-dark">
               <tr>
                 <th>Sr. No.</th>
-                <th>User Email</th>
+                <th>Complainant's Email</th>
+                <th>Complainant's Phone Number</th>
                 <th>Priority</th>
                 <th>Complaint Type</th>
                 <th>Sub-type</th>
