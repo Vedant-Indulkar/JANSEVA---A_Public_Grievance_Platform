@@ -32,7 +32,7 @@ export default function Login() {
             alert(error);
         } else {
             // Regular user login successful
-            alert('Successfully logged in!');
+            // alert('Successfully logged in!');
             // Set email in local storage after successful login
             localStorage.setItem('loggedInUserEmail', email);
             // Navigate to the Complaintform page

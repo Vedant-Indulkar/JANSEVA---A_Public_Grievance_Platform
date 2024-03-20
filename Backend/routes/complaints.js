@@ -5,7 +5,8 @@ const {
     getComplaints,
     getComplaint,
     deleteComplaint,
-    updateComplaint
+    updateComplaint,
+    getAllComplaints
 } = require('../controllers/complaintController')
 
 
@@ -22,6 +23,11 @@ router.use(requireAuth)
 
 router.post('/upvote', upvoteComplaint)
 
+router.get('/all/upvote', getAllComplaints )
+
+
+
+
 // GET the lodge  complaint page
 router.get('/', (req, res) => {
     res.send('Lodge complaints');
@@ -29,6 +35,7 @@ router.get('/', (req, res) => {
 
 //GET all complaints
 router.get('/all', getComplaints )
+
 
 //route to POST lodge complaint
 router.post('/', upload.fields([

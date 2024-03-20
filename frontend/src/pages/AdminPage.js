@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
+// import { useNavigate } from "react-router-dom";
+// import { useAuthContext } from "../hooks/useAuthContext";
 import { Modal, Form, Button, ButtonGroup } from "react-bootstrap";
 import { workerNames } from "../constants/names";
 import axios from "axios";
@@ -15,9 +15,9 @@ const AdminPage = () => {
   const [selectedComplaintId, setSelectedComplaintId] = useState("");
   const [complaintStatusFilter, setComplaintStatusFilter] = useState("");
 
-  const { user } = useAuthContext();
+  // const { user } = useAuthContext();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const fetchComplaints = async () => {

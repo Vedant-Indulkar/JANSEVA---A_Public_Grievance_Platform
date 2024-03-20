@@ -48,6 +48,9 @@ const updateComplaintStatus = async (req, res) => {
   }
 };
 
+//get status
+// const getStatus
+
 const assignWorkerToAComplaint = async (req, res) => {
   const { complaintId } = req.params;
   const { assignee } = req.body;
