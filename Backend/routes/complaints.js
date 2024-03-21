@@ -21,7 +21,7 @@ const router = express.Router();
 //require auth for all complaints routes
 router.use(requireAuth)
 
-router.post('/upvote', upvoteComplaint)
+router.post('/:id/upvote', upvoteComplaint)
 
 router.get('/all/upvote', getAllComplaints )
 

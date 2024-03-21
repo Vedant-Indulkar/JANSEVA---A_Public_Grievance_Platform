@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { useAuthContext } from '../hooks/useAuthContext';
 
 const formatTimeAgo = (timestamp) => {
@@ -25,13 +27,15 @@ const formatTimeAgo = (timestamp) => {
 const ComplaintsList = () => {
   const [complaints, setComplaints] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [userUpvotedComplaints, setUserUpvotedComplaints] = useState([]);
   const { user } = useAuthContext();
 
   useEffect(() => {
     if (user && user.token) {
       fetchComplaints();
+      fetchUserUpvotedComplaints();
     }
-  }, [user]); // Include user in dependency array
+  }, [user]);
 
   const fetchComplaints = async () => {
     try {
@@ -46,6 +50,19 @@ const ComplaintsList = () => {
     }
   };
 
+  const fetchUserUpvotedComplaints = async () => {
+    try {
+      const response = await axios.get('/user/upvoted/complaints', {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      setUserUpvotedComplaints(response.data);
+    } catch (error) {
+      console.error('Error fetching user upvoted complaints:', error);
+    }
+  };
+
   const handleUpvote = async (id) => {
     try {
       const response = await axios.post(`/complaints/${id}/upvote`, null, {
@@ -53,10 +70,10 @@ const ComplaintsList = () => {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      
+  
       // Update local state to reflect the upvote
-      setComplaints(prevComplaints =>
-        prevComplaints.map(complaint => {
+      setComplaints((prevComplaints) =>
+        prevComplaints.map((complaint) => {
           if (complaint._id === id) {
             // Assuming response.data contains updated complaint data including upvotes count
             return { ...complaint, upvotes: response.data.upvotes };
@@ -64,17 +81,25 @@ const ComplaintsList = () => {
           return complaint;
         })
       );
+  
+      // Update userUpvotedComplaints state to include the upvoted complaint ID
+      setUserUpvotedComplaints((prevUserUpvotedComplaints) => [
+        ...prevUserUpvotedComplaints,
+        id,
+      ]);
     } catch (error) {
       console.error('Error upvoting complaint:', error);
+      alert('already complaint upvoted');
     }
   };
+  
   
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredComplaints = complaints.filter(complaint =>
+  const filteredComplaints = complaints.filter((complaint) =>
     complaint.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -83,6 +108,7 @@ const ComplaintsList = () => {
       <Navbar />
       <div className="container mt-4">
         <h1 className="mb-4">Complaints</h1>
+        <h3>If you find the complaint relevant, click UPVOTE </h3>
         <div className="mb-3">
           <input
             type="text"
@@ -93,15 +119,11 @@ const ComplaintsList = () => {
           />
         </div>
         <div className="complaints-list">
-          {filteredComplaints.map(complaint => (
+          {filteredComplaints.map((complaint) => (
             <div className="complaint card mb-3" key={complaint._id}>
               <div className="row g-0">
                 <div className="col-md-4">
-                  <img
-                    src={complaint.image_url}
-                    alt="Complaint"
-                    className="img-fluid"
-                  />
+                  <img src={complaint.image_url} alt="Complaint" className="img-fluid" />
                 </div>
                 <div className="col-md-8">
                   <div className="card-body">
@@ -112,19 +134,23 @@ const ComplaintsList = () => {
                         Posted {formatTimeAgo(complaint.createdAt)}
                       </small>
                     </p>
-                    <div className="voting">
-  <button
-    className={`btn ${
-      complaint.upvoted ? 'btn-success disabled' : 'btn-outline-success'
-    }`}
-    onClick={() => handleUpvote(complaint._id)}
-    disabled={complaint.upvoted}
-  >
-    Upvote
-  </button>
-  <span>{complaint.upvotes}</span> {/* Display upvote count */}
-</div>
 
+                    <div className="voting">
+                    <button 
+                      className={`btn ${
+                        userUpvotedComplaints.includes(complaint._id)
+                          ? 'btn-success disabled'
+                          : 'btn-outline-success'
+                      }`}
+                      onClick={() => complaint && handleUpvote(complaint._id)} // Add conditional check
+                      disabled={userUpvotedComplaints.includes(complaint._id)}
+                    >
+                      <FontAwesomeIcon icon={faThumbsUp} /> {/* Add the icon */}
+                    </button>
+
+
+                    <span className='mx-2'>{complaint.upvotes.length}</span>
+                    </div>
                   </div>
                 </div>
               </div>
