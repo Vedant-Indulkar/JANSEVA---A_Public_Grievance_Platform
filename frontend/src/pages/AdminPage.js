@@ -79,9 +79,11 @@ const AdminPage = () => {
           .map((complaint, index) => (
             <tr key={complaint.id}>
               <td>{index + 1}</td>
+              <td>{"C"+(index+1)}</td>
               <td>{complaint.priority}</td>
               <td>{complaint.category}</td>
               <td>{complaint.sub_category}</td>
+              <td>{complaint.user_id}</td>
               <td>
                 <div className="d-flex align-items-center">
                   <div style={{ flex: 1 }}>
@@ -113,9 +115,11 @@ const AdminPage = () => {
                   }
                 >
                   <option value="pending">Pending</option>
+                  <option value="in-progress">In Progress</option>
                   <option value="completed">Completed</option>
                 </select>
                 <button className="my-2 btn-primary">Submit</button>
+               
               </td>
             </tr>
           ))}
@@ -147,11 +151,13 @@ const AdminPage = () => {
             <thead className="table-dark">
               <tr>
                 <th>Sr. No.</th>
+                <th>Complaint ID</th>
                 <th>Priority</th>
                 <th>Complaint Type</th>
                 <th>Sub-type</th>
+                <th>Citizen UID</th>
                 <th>Description</th>
-                <th>Ward No.</th>
+                <th>Sector No.</th>
                 <th>Address</th>
                 <th>Status</th>
               </tr>
@@ -167,3 +173,4 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
+

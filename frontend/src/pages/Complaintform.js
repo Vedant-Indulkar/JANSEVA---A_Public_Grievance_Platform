@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 import Navbar from '../components/Navbar'
 import { useNavigate, Link} from 'react-router-dom';
 import { useComplaintsContext } from '../hooks/useComplaintsContext';
 import { useAuthContext } from "../hooks/useAuthContext"
+import Map from '../pages/Map.js';
+// import LanguageSwitcher from '../pages/LanguageSwitcher.js';
+
+
 // import './complaintform.css'; // Custom CSS file (if needed)
 
 const Complaintform = () => {
@@ -21,6 +25,7 @@ const Complaintform = () => {
   const [image, setImage] = useState('')
   const [location, setLocation] = useState('')
   const [error, setError] = useState(null)
+  const [coordinates, setCoordinates] = useState([]);
 
   // const [formData, setFormData] = useState({
   //   category: '',
@@ -30,7 +35,6 @@ const Complaintform = () => {
   //   image: null,
   //   location: '',
   // });
-
   const complaintCategories = ['Roads and Footpath'];
   const subCategoriesMap = {
     'Roads and Footpath': ['Damaged Road', 'Damaged Footpath', 'Damaged Road Divider', 'No marking on Bump', 'Marking no proper on Bump','Marking no proper on Zebra Crossing'],
@@ -39,8 +43,7 @@ const Complaintform = () => {
   };
   const wardNumbers = ['Ward 1', 'Ward 2', 'Ward 3'];
 
-
-
+  
 
 
   const handleSubmit = async (e) => {
@@ -90,17 +93,20 @@ const Complaintform = () => {
       navigate('/Profile')
     
     }
+
   };
   
 
   return (
     <>
+
     <Navbar/>
+
     <div className="container mt-5">
       <h2 className="mb-4">Complaint Form</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="category" className="form-label">
+          <label id="CC1"  htmlFor="category" className="form-label">
             Complaint Category:
           </label>
           <select
@@ -144,6 +150,7 @@ const Complaintform = () => {
                 </option>
               ))}
             </select>
+            
           </div>
         )}
 
@@ -198,21 +205,25 @@ const Complaintform = () => {
           />
         </div>
 
-        <div className="mb-3">
-          <label htmlFor="address" className="form-label">
-            Address:
-          </label>
-          <textarea
-            id="address"
-            name="address"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)} 
-            className="form-control"
-            required
-          ></textarea>
-        </div>
+          <div className="mb-3">
+            <label htmlFor="address" className="form-label">
+              Address:
+            </label>
+            <textarea
+              id="address"
+              name="address"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)} 
+              className="form-control"
+              required
+            ></textarea>
+          </div>
+            
 
-        {/* Submit button */}
+          <Map coordinates={coordinates.length > 0 ? coordinates : [{ name: 'Default Marker', lngLat: [ 72.9986,19.1590] }]} />
+            
+
+
         <button type="submit" className="btn btn-dark">
           Submit Complaint
         </button>
@@ -224,3 +235,4 @@ const Complaintform = () => {
 
         
 export default Complaintform;
+
