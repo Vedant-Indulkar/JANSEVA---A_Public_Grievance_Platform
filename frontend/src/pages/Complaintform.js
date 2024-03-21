@@ -2,12 +2,14 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import Navbar from "../components/Navbar";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useComplaintsContext } from "../hooks/useComplaintsContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRoad, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-// import './complaintform.css'; // Custom CSS file (if needed)
+
 
 const Complaintform = () => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const Complaintform = () => {
   const [ward_no, setWardNo] = useState("");
   const [location, setLocation] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [voicedescription, setVoiceDescription] = useState('');
   const [error, setError] = useState(null);
 
   const complaintCategories = [
@@ -29,7 +32,10 @@ const Complaintform = () => {
     // Add more categories with icons if needed
   ];
 
-  // const complaintCategories = ["Roads and Footpath"];
+
+ 
+  const complaintCategories = ["Roads and Footpath"];
+
   const subCategoriesMap = {
     "Roads and Footpath": [
       "Damaged Road",
@@ -262,6 +268,7 @@ const Complaintform = () => {
               required></input>
           </div>
 
+       
           {/* Submit button */}
           <button type="submit" className="btn btn-dark">
             Submit Complaint
