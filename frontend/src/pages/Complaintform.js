@@ -1,9 +1,12 @@
+// Import necessary modules
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import Navbar from "../components/Navbar";
 import { useNavigate, Link } from "react-router-dom";
 import { useComplaintsContext } from "../hooks/useComplaintsContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRoad, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 // import './complaintform.css'; // Custom CSS file (if needed)
 
 const Complaintform = () => {
@@ -21,16 +24,12 @@ const Complaintform = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState(null);
 
-  // const [formData, setFormData] = useState({
-  //   category: '',
-  //   subCategory: '',
-  //   description: '',
-  //   wardNo: '',
-  //   image: null,
-  //   location: '',
-  // });
+  const complaintCategories = [
+    { label: "Roads and Footpath", icon: faRoad },
+    // Add more categories with icons if needed
+  ];
 
-  const complaintCategories = ["Roads and Footpath"];
+  // const complaintCategories = ["Roads and Footpath"];
   const subCategoriesMap = {
     "Roads and Footpath": [
       "Damaged Road",
@@ -40,8 +39,6 @@ const Complaintform = () => {
       "Marking no proper on Bump",
       "Marking no proper on Zebra Crossing",
     ],
-    // 'Category 2': ['Subcategory 2.1', 'Subcategory 2.2', 'Subcategory 2.3'],
-    // 'Category 3': ['Subcategory 3.1', 'Subcategory 3.2', 'Subcategory 3.3'], Vedant
   };
   const wardNumbers = ["Ward 1", "Ward 2", "Ward 3"];
 
@@ -63,8 +60,6 @@ const Complaintform = () => {
       image_url: imageDataUri,
       phoneNumber,
       location, // Include the address field
-      
-      
     };
 
     const response = await fetch("/complaints", {
@@ -90,15 +85,11 @@ const Complaintform = () => {
       setImageDataUri("");
       setPhoneNumber("");
       setLocation("");
-   
-      
       console.log("new complaint added:", json);
-
       dispatch({ type: "CREATE_WORKOUT", payload: json });
       navigate("/Profile");
     }
   };
-
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -124,6 +115,7 @@ const Complaintform = () => {
             </label>
             <select
               id="category"
+              
               name="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -134,10 +126,10 @@ const Complaintform = () => {
                 Select Category
               </option>
               {complaintCategories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
+  <option key={category.label} value={category.label}>
+    <FontAwesomeIcon icon={category.icon} /> {category.label}
+  </option>
+))}
             </select>
           </div>
 
@@ -218,6 +210,27 @@ const Complaintform = () => {
               className="form-control"
             />
           </div>
+
+          {/* Image preview */}
+          {imageDataUri && (
+            <div className="mb-3">
+              <img src={imageDataUri} alt="Preview" style={{ maxWidth: '100%', height: 'auto' }} />
+            </div>
+          )}
+
+          {/* <div className="mb-3">
+            <label htmlFor="address" className="form-label">
+              Address:
+            </label>
+            <textarea
+              id="address"
+              name="address"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="form-control"
+              required
+            ></textarea>
+          </div> */}
 
           <div className="mb-3">
             <label htmlFor="address" className="form-label">

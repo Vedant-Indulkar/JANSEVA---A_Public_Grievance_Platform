@@ -17,10 +17,36 @@ export default function Carousels() {
     }
   };
 
+  const handleUpvoteClick = () => {
+    if (!isLoggedIn) {
+      // If user is not logged in, redirect to login page
+      // You may replace '/Login' with your actual login route
+      window.location.href = '/Login';
+    }
+  };
+
   return (
     <>
       <div className="row my-2">
-        <div className="col-sm-6">
+        {/* Upvote Page Card */}
+        <div className="col-sm-4">
+          <div className="card text-center card-hover-gradient">
+            <div className="card-body">
+              <img src="images/upvote.png" alt="Profile Icon" style={{ width: '50px', height: '50px', marginBottom: '10px' }}/>
+              <h5 className="card-title">UPVOTE HERE!</h5>
+              <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              {/* Conditionally render Link based on user's authentication status */}
+              {isLoggedIn ? (
+                <Link to="/upvote" className="btn btn-dark">Go To Upvote</Link>
+              ) : (
+                <button className="btn btn-dark" onClick={handleUpvoteClick}>Go To Upvote Page</button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Lodge Complaint Card */}
+        <div className="col-sm-4">
           <div className="card text-center card-hover-gradient">
             <div className="card-body">
               <img src="images/complaint.png" alt="Complaint Icon" style={{ width: '50px', height: '50px', marginBottom: '10px' }}/>
@@ -30,7 +56,9 @@ export default function Carousels() {
             </div>
           </div>
         </div>
-        <div className="col-sm-6">
+
+        {/* View Profile Card */}
+        <div className="col-sm-4">
           <div className="card text-center card-hover-gradient">
             <div className="card-body">
               <img src="images/profile.jpg" alt="Profile Icon" style={{ width: '50px', height: '50px', marginBottom: '10px' }}/>
