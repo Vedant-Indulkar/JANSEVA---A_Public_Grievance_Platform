@@ -11,19 +11,19 @@ const getAllComplaints = async (req, res) => {
 
 
 const upvoteComplaint = async (req, res) => {
-  const postId = req.body.postId;
+  const postId = req.params.id; // Assuming complaint ID is in the URL params
   const userId = req.user._id;
+
   try {
     // Find the complaint by ID
     const complaint = await Complaint.findById(postId);
-    console.log(complaint);
 
     if (!complaint) {
       return res.status(404).json({ error: "No such complaint found" });
     }
 
     // Check if the user has already upvoted this complaint
-    if (complaint.upvotes.includes(postId)) {
+    if (complaint.upvotes.includes(userId)) { // Check if userId is already in upvotes array
       return res.status(400).json({ error: "User has already upvoted this complaint" });
     }
 
@@ -33,11 +33,12 @@ const upvoteComplaint = async (req, res) => {
     // Save the updated complaint
     await complaint.save();
 
-    res.status(200).json({"message":"upvoted successfully"});
+    res.status(200).json({ message: "Upvoted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 //get all complaints
 const getComplaints = async (req, res) => {

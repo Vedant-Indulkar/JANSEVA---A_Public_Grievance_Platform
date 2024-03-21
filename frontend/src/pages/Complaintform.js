@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import Navbar from "../components/Navbar";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useComplaintsContext } from "../hooks/useComplaintsContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+
 // import './complaintform.css'; // Custom CSS file (if needed)
 
 const Complaintform = () => {
@@ -19,6 +20,7 @@ const Complaintform = () => {
   const [ward_no, setWardNo] = useState("");
   const [location, setLocation] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [voicedescription, setVoiceDescription] = useState('');
   const [error, setError] = useState(null);
 
   // const [formData, setFormData] = useState({
@@ -30,6 +32,7 @@ const Complaintform = () => {
   //   location: '',
   // });
 
+ 
   const complaintCategories = ["Roads and Footpath"];
   const subCategoriesMap = {
     "Roads and Footpath": [
@@ -249,6 +252,7 @@ const Complaintform = () => {
               required></input>
           </div>
 
+       
           {/* Submit button */}
           <button type="submit" className="btn btn-dark">
             Submit Complaint
