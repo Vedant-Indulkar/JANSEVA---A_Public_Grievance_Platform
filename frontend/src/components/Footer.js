@@ -86,7 +86,7 @@ export default function Customfooter() {
             className="card-img-fit"
           />
           <Card.Body>
-            <Card.Title> Feedback: Person 1</Card.Title>
+            <Card.Title> <b> Feedback </b>: Clean Roads</Card.Title>
             <Card.Text>
               This is a wider card with supporting text below as a natural
               lead-in to additional content. This content is a little bit
@@ -104,7 +104,7 @@ export default function Customfooter() {
             className="card-img-fit"
           />
           <Card.Body>
-            <Card.Title>Feedback: Person 2</Card.Title>
+            <Card.Title> <b> Feedback </b>: Immediate action on sanitation</Card.Title>
             <Card.Text>
               This card has supporting text below as a natural lead-in to
               additional content.
@@ -121,7 +121,7 @@ export default function Customfooter() {
             className="card-img-fit"
           />
           <Card.Body>
-            <Card.Title>Feedback: Person 3</Card.Title>
+            <Card.Title> <b> Feedback </b>:Solved Electricity issues</Card.Title>
             <Card.Text>
               This is a wider card with supporting text below as a natural
               lead-in to additional content. This card has even longer content
