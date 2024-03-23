@@ -1,28 +1,28 @@
-// Import necessary modules
-import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
-import Navbar from "../components/Navbar";
-import { useNavigate } from "react-router-dom";
-import { useComplaintsContext } from "../hooks/useComplaintsContext";
-import { useAuthContext } from "../hooks/useAuthContext";
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import Navbar from '../components/Navbar'
+import { useNavigate, Link} from 'react-router-dom';
+import { useComplaintsContext } from '../hooks/useComplaintsContext';
+import { useAuthContext } from "../hooks/useAuthContext"
+import Map from '../pages/Map.js';
+// import LanguageSwitcher from '../pages/LanguageSwitcher.js';
 
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRoad, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-
+// import './complaintform.css'; // Custom CSS file (if needed)
 
 const Complaintform = () => {
   const navigate = useNavigate();
+  
+  const { dispatch } = useComplaintsContext()
+  const { user } = useAuthContext()
 
-  const { dispatch } = useComplaintsContext();
-  const { user } = useAuthContext();
 
-  const [category, setCategory] = useState("");
-  const [sub_category, setSubCategory] = useState("");
-  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState('')
+  const [sub_category, setSubCategory] = useState('')
+  const [description, setDescription] = useState('')
+  const [ward_no, setWardNo] = useState('')
   const [imageDataUri, setImageDataUri] = useState(null);
-  const [ward_no, setWardNo] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState('')
   const [phoneNumber, setPhoneNumber] = useState("");
   const [voicedescription, setVoiceDescription] = useState('');
   const [error, setError] = useState(null);
@@ -46,7 +46,10 @@ const Complaintform = () => {
       "Marking no proper on Zebra Crossing",
     ],
   };
-  const wardNumbers = ["Ward 1", "Ward 2", "Ward 3"];
+  const wardNumbers = ['Ward 1', 'Ward 2', 'Ward 3'];
+
+  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -84,17 +87,19 @@ const Complaintform = () => {
     }
     if (response.ok) {
       setError(null);
-      setCategory("");
-      setSubCategory("");
-      setDescription("");
-      setWardNo("");
+      setCategory('');
+      setSubCategory('');
+      setDescription('');
+      setWardNo('');
       setImageDataUri("");
-      setPhoneNumber("");
-      setLocation("");
-      console.log("new complaint added:", json);
-      dispatch({ type: "CREATE_WORKOUT", payload: json });
-      navigate("/Profile");
+      setLocation('');
+      console.log('new complaint added:', json);
+      
+      dispatch({type: 'CREATE_WORKOUT', payload: json})
+      navigate('/Profile')
+    
     }
+
   };
 
   const handleImageUpload = (event) => {
@@ -107,37 +112,41 @@ const Complaintform = () => {
       setImageDataUri(dataUri);
     };
     reader.readAsDataURL(file);
-  };
+  };
+
+
+  
 
   return (
     <>
-      <Navbar />
-      <div className="container mt-5">
-        <h2 className="mb-4">Complaint Form</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="category" className="form-label">
-              Complaint Category:
-            </label>
-            <select
-              id="category"
-              
-              name="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="form-select"
-              required
-            >
-              <option value="" disabled>
-                Select Category
+
+    <Navbar/>
+
+    <div className="container mt-5">
+      <h2 className="mb-4">Complaint Form</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label id="CC1"  htmlFor="category" className="form-label">
+            Complaint Category:
+          </label>
+          <select
+            id="category"
+            name="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)} 
+            className="form-select"
+            required
+          >
+            <option value="" disabled>
+              Select Category
+            </option>
+            {complaintCategories.map((category) => (
+              <option key={category} value={category}>
+                {category}
               </option>
-              {complaintCategories.map((category) => (
-  <option key={category.label} value={category.label}>
-    <FontAwesomeIcon icon={category.icon} /> {category.label}
-  </option>
-))}
-            </select>
-          </div>
+            ))}
+          </select>
+        </div>
 
           {category && (
             <div className="mb-3">
@@ -163,6 +172,31 @@ const Complaintform = () => {
               </select>
             </div>
           )}
+        {category && (
+          <div className="mb-3">
+            <label htmlFor="subCategory" className="form-label">
+              Complaint Sub-Category:
+            </label>
+            <select
+              id="subCategory"
+              name="subCategory"
+              value={sub_category}
+              onChange={(e) => setSubCategory(e.target.value)} 
+              className="form-select"
+              required
+            >
+              <option value="" disabled>
+                Select Sub-Category
+              </option>
+              {subCategoriesMap[category].map((sub_category) => (
+                <option key={sub_category} value={sub_category}>
+                  {sub_category}
+                </option>
+              ))}
+            </select>
+            
+          </div>
+        )}
 
           <div className="mb-3">
             <label htmlFor="description" className="form-label">
@@ -178,30 +212,30 @@ const Complaintform = () => {
             ></textarea>
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="wardNo" className="form-label">
-              Ward Number:
-            </label>
-            <select
-              id="wardNo"
-              name="wardNo"
-              value={ward_no}
-              onChange={(e) => setWardNo(e.target.value)}
-              className="form-select"
-              required
-            >
-              <option value="" disabled>
-                Select Ward Number
+        <div className="mb-3">
+          <label htmlFor="wardNo" className="form-label">
+            Ward Number:
+          </label>
+          <select
+            id="wardNo"
+            name="wardNo"
+            value={ward_no}
+            onChange={(e) => setWardNo(e.target.value)} 
+            className="form-select"
+            required
+          >
+            <option value="" disabled>
+              Select Ward Number
+            </option>
+            {wardNumbers.map((ward_no) => (
+              <option key={ward_no} value={ward_no}>
+                {ward_no}
               </option>
-              {wardNumbers.map((ward_no) => (
-                <option key={ward_no} value={ward_no}>
-                  {ward_no}
-                </option>
-              ))}
-            </select>
-          </div>
+            ))}
+          </select>
+        </div>
 
-          <div className="mb-3">
+        <div className="mb-3">
             <label htmlFor="image" className="form-label">
               Upload Image:
             </label>
@@ -222,21 +256,7 @@ const Complaintform = () => {
             <div className="mb-3">
               <img src={imageDataUri} alt="Preview" style={{ maxWidth: '100%', height: 'auto' }} />
             </div>
-          )}
-
-          {/* <div className="mb-3">
-            <label htmlFor="address" className="form-label">
-              Address:
-            </label>
-            <textarea
-              id="address"
-              name="address"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="form-control"
-              required
-            ></textarea>
-          </div> */}
+          )}
 
           <div className="mb-3">
             <label htmlFor="address" className="form-label">
@@ -246,37 +266,26 @@ const Complaintform = () => {
               id="address"
               name="address"
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={(e) => setLocation(e.target.value)} 
               className="form-control"
               required
             ></textarea>
           </div>
-          <div className="mb-3">
-            <label htmlFor="phoneNumber" className="form-label">
-              Phone Number:
-            </label>
-            <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="form-control"
-              pattern="[0-9]{10}" // Ensure only numbers and length of 10
-              maxLength={10}
-              minLength={10}
-              required></input>
-          </div>
+            
 
-       
-          {/* Submit button */}
-          <button type="submit" className="btn btn-dark">
-            Submit Complaint
-          </button>
-        </form>
-      </div>
+          <Map coordinates={coordinates.length > 0 ? coordinates : [{ name: 'Default Marker', lngLat: [ 72.9986,19.1590] }]} />
+            
+
+
+        <button type="submit" className="btn btn-dark">
+          Submit Complaint
+        </button>
+      </form>
+    </div>
     </>
   );
 };
 
+        
 export default Complaintform;
+

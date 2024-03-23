@@ -156,6 +156,7 @@ const AdminPage = () => {
           .map((complaint, index) => (
             <tr key={complaint.id}>
               <td>{index + 1}</td>
+              <td>{"C"+(index+1)}</td>
              
               <td>{complaint.user_id.email}</td>
               <td>{String(complaint.phoneNumber)}</td>
@@ -226,6 +227,8 @@ const AdminPage = () => {
                   <option value="COMPLETED">Completed</option>
                   <option value="IN PROGRESS">In Progress</option>
                 </select>
+                <button className="my-2 btn-primary">Submit</button>
+               
               </td>
             </tr>
           ))}
@@ -306,11 +309,13 @@ const AdminPage = () => {
                 <th>Sr. No.</th>
                 <th>Complainant's Email</th>
                 <th>Complainant's Phone Number</th>
+                <th>Complaint ID</th>
                 <th>Priority</th>
                 <th>Complaint Type</th>
                 <th>Sub-type</th>
+                <th>Citizen UID</th>
                 <th>Description</th>
-                <th>Ward No.</th>
+                <th>Sector No.</th>
                 <th>Address</th>
                 <th>Assigned to</th>
                 <th>Status</th>
@@ -349,3 +354,4 @@ const handleAssignUser = async (
 };
 
 export default AdminPage;
+
