@@ -24,18 +24,18 @@ const Complaintform = () => {
   const [imageDataUri, setImageDataUri] = useState(null);
   const [location, setLocation] = useState('')
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [error, setError] = useState(null)
-  const [coordinates, setCoordinates] = useState([]);
+  const [voicedescription, setVoiceDescription] = useState('');
+  const [error, setError] = useState(null);
 
-  // const [formData, setFormData] = useState({
-  //   category: '',
-  //   subCategory: '',
-  //   description: '',
-  //   wardNo: '',
-  //   image: null,
-  //   location: '',
-  // });
-  const complaintCategories = ['Roads and Footpath'];
+  const complaintCategories = [
+    { label: "Roads and Footpath", icon: faRoad },
+    // Add more categories with icons if needed
+  ];
+
+
+ 
+  // const complaintCategories = ["Roads and Footpath"];
+
   const subCategoriesMap = {
     "Roads and Footpath": [
       "Damaged Road",

@@ -59,20 +59,31 @@ function App() {
 
 
   return (
-    <div>
+   <div>
+    
+    {/* <Navbar/>
+    <Carousels/>
+    <Footer/> */}
+
+    <BrowserRouter>
+    <Routes>
+
+      <Route actual path="/"element={<Home/>}/>
+      <Route actual path="/AboutUs" element={<AboutUs/>}/>
+      <Route path="/Profile" element={user ? <Profile/> : <Navigate to='/login' /> }/>
+      <Route path="/upvote" element={<ComplaintsList/>}/>
+
+      <Route path="/Complaintform" element={user ? <Complaintform/> : <Navigate to='/login' /> }/>
+      <Route path= "/login" element={!user ? <Login/> : <Navigate to='/'></Navigate>} />
+      <Route path= "/signup" element={ !user ? <Signup/> : <Navigate to='/complaintform'></Navigate> } />
+      <Route actual path="/admin" element={<AdminPage/>}/>
      
-      <BrowserRouter>
-        <Routes>
-          <Route actual path="/" element={<Home />} />
-          <Route actual path="/AboutUs" element={<AboutUs />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/Complaintform" element={user ? <Complaintform /> : <Navigate to='/login' />} />
-          <Route path="/login" element={!user ? <Login /> : <Navigate to='/complaintform'></Navigate>} />
-          <Route path="/signup" element={!user ? <Signup /> : <Navigate to='/complaintform'></Navigate>} />
-          <Route actual path="/admin" element={<AdminPage />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+
+     
+
+    </Routes>
+    </BrowserRouter>
+   </div>
   );
 }
 
