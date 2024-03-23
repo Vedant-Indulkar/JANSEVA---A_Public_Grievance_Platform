@@ -1,8 +1,8 @@
 import React from "react";
 import { useComplaintsContext } from '../hooks/useComplaintsContext'
 import { useAuthContext } from '../hooks/useAuthContext'
-import Navbar from "./Navbar"; // Assuming Navbar component is in separate file
-import Button from "react-bootstrap/Button"; // Assuming Button component is imported from react-bootstrap
+// import Navbar from "./Navbar"; // Assuming Navbar component is in separate file
+// import Button from "react-bootstrap/Button"; // Assuming Button component is imported from react-bootstrap
 
 const Complaintdetails = ({ complaint, showAlert, handleCloseAlert, handleLogout }) => {
 
@@ -52,6 +52,16 @@ const Complaintdetails = ({ complaint, showAlert, handleCloseAlert, handleLogout
           <div>
             <strong>Address:</strong> {complaint.location}
           </div>
+          <div>
+            <strong>Image:</strong> <img src={complaint.image_url}></img>
+          </div>
+          <div>
+            <strong>Complaint Status:</strong> {complaint.status}
+          </div>
+          <div>
+            <strong>Your complaint is assigned to :</strong> {complaint.assignee}
+          </div>
+
         </div>
       </div>
     </div>

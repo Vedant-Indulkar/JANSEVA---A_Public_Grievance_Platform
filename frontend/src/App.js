@@ -16,6 +16,9 @@ import Complaintform from './pages/Complaintform';
 import Profile from './pages/Profile';
 import Signup from './pages/Signup';
 import AdminPage from './pages/AdminPage';
+import ComplaintsList from './pages/upvotepg';
+
+
 
 
 function App() {

@@ -1,0 +1,28 @@
+export const workerNames = [
+  "Aarav Patil - Road Contractor , Phone : 9876543210",
+  "Anaya Deshmukh - Road Contractor , Phone : 9876543211",
+  "Advait Joshi - Road Contractor , Phone : 9876543212",
+  "Ishan Pawar - Road Contractor , Phone : 9876543213",
+  "Tanvi Chavan - Road Contractor , Phone : 9876543214",
+  "Kavya More - Plumber , Phone : 9876543215",
+  "Yash Kulkarni - Plumber , Phone : 9876543216",
+  "Riya Sawant - Plumber , Phone : 9876543217",
+  "Vedant Gaikwad - Plumber , Phone : 9876543218",
+  "Sai Mehta - Plumber , Phone : 9876543219",
+  "Aarohi Shah - Electrician , Phone : 9876543220",
+  "Atharva Mane - Electrician , Phone : 9876543221",
+  "Pari Khare - Electrician , Phone : 9876543222",
+  "Avani Gokhale - Electrician , Phone : 9876543223",
+  "Aryan Malhotra - Electrician , Phone : 9876543224",
+  "Ishaan Raut - Sanitation Manager , Phone : 9876543225",
+  "Arnav Phatak - Sanitation Manager , Phone : 9876543226",
+  "Kiara Nair - Sanitation Manager , Phone : 9876543227",
+  "Arush Thakur - Sanitation Manager , Phone : 9876543228",
+  "Anika Patwardhan - Sanitation Manager , Phone : 9876543229",
+  "Aahana Sharma - Sanitation Manager , Phone : 9876543230",
+  "Reyansh Dalvi - Sanitation Manager , Phone : 9876543231",
+  "Sara Paranjape - Sanitation Manager , Phone : 9876543232",
+  "Dhruv Shahane - Sanitation Manager , Phone : 9876543233",
+  "Anvi Godbole - Sanitation Manager , Phone : 9876543234"
+  ];
+  

@@ -11,7 +11,6 @@ import Map from '../pages/Map.js';
 // import './complaintform.css'; // Custom CSS file (if needed)
 
 const Complaintform = () => {
-
   const navigate = useNavigate();
   
   const { dispatch } = useComplaintsContext()
@@ -22,8 +21,9 @@ const Complaintform = () => {
   const [sub_category, setSubCategory] = useState('')
   const [description, setDescription] = useState('')
   const [ward_no, setWardNo] = useState('')
-  const [image, setImage] = useState('')
+  const [imageDataUri, setImageDataUri] = useState(null);
   const [location, setLocation] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState(null)
   const [coordinates, setCoordinates] = useState([]);
 
@@ -37,9 +37,14 @@ const Complaintform = () => {
   // });
   const complaintCategories = ['Roads and Footpath'];
   const subCategoriesMap = {
-    'Roads and Footpath': ['Damaged Road', 'Damaged Footpath', 'Damaged Road Divider', 'No marking on Bump', 'Marking no proper on Bump','Marking no proper on Zebra Crossing'],
-    // 'Category 2': ['Subcategory 2.1', 'Subcategory 2.2', 'Subcategory 2.3'],
-    // 'Category 3': ['Subcategory 3.1', 'Subcategory 3.2', 'Subcategory 3.3'], Vedant
+    "Roads and Footpath": [
+      "Damaged Road",
+      "Damaged Footpath",
+      "Damaged Road Divider",
+      "No marking on Bump",
+      "Marking no proper on Bump",
+      "Marking no proper on Zebra Crossing",
+    ],
   };
   const wardNumbers = ['Ward 1', 'Ward 2', 'Ward 3'];
 
@@ -48,11 +53,11 @@ const Complaintform = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(imageDataUri)
 
     if (!user) {
-      setError('You must be logged in')
-      return
+      setError("You must be logged in");
+      return;
     }
 
     // Handle form submission logic here (e.g., send data to server)
@@ -61,21 +66,22 @@ const Complaintform = () => {
       sub_category,
       description,
       ward_no,
-      image,
-      location // Include the address field
+      image_url: imageDataUri,
+      phoneNumber,
+      location, // Include the address field
     };
-  
-    const response = await fetch('/complaints', {
-      method: 'POST',
+
+    const response = await fetch("/complaints", {
+      method: "POST",
       body: JSON.stringify(complaint),
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.token}`
-      }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
     });
-  
+
     const json = await response.json();
-  
+
     if (!response.ok) {
       setError(json.error);
     }
@@ -85,7 +91,7 @@ const Complaintform = () => {
       setSubCategory('');
       setDescription('');
       setWardNo('');
-      setImage('');
+      setImageDataUri("");
       setLocation('');
       console.log('new complaint added:', json);
       
@@ -95,6 +101,20 @@ const Complaintform = () => {
     }
 
   };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUri = e.target.result;
+      setImageDataUri(dataUri);
+    };
+    reader.readAsDataURL(file);
+  };
+
+
   
 
   return (
@@ -128,6 +148,30 @@ const Complaintform = () => {
           </select>
         </div>
 
+          {category && (
+            <div className="mb-3">
+              <label htmlFor="subCategory" className="form-label">
+                Complaint Sub-Category:
+              </label>
+              <select
+                id="subCategory"
+                name="subCategory"
+                value={sub_category}
+                onChange={(e) => setSubCategory(e.target.value)}
+                className="form-select"
+                required
+              >
+                <option value="" disabled>
+                  Select Sub-Category
+                </option>
+                {subCategoriesMap[category].map((sub_category) => (
+                  <option key={sub_category} value={sub_category}>
+                    {sub_category}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         {category && (
           <div className="mb-3">
             <label htmlFor="subCategory" className="form-label">
@@ -154,19 +198,19 @@ const Complaintform = () => {
           </div>
         )}
 
-        <div className="mb-3">
-          <label htmlFor="description" className="form-label">
-            Complaint Description:
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)} 
-            className="form-control"
-            required
-          ></textarea>
-        </div>
+          <div className="mb-3">
+            <label htmlFor="description" className="form-label">
+              Complaint Description:
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="form-control"
+              required
+            ></textarea>
+          </div>
 
         <div className="mb-3">
           <label htmlFor="wardNo" className="form-label">
@@ -192,18 +236,27 @@ const Complaintform = () => {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="image" className="form-label">
-            Upload Image:
-          </label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.value)} 
-            className="form-control"
-          />
-        </div>
+            <label htmlFor="image" className="form-label">
+              Upload Image:
+            </label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              onChange={(e) => {
+                handleImageUpload(e);
+              }}
+              className="form-control"
+            />
+          </div>
+
+          {/* Image preview */}
+          {imageDataUri && (
+            <div className="mb-3">
+              <img src={imageDataUri} alt="Preview" style={{ maxWidth: '100%', height: 'auto' }} />
+            </div>
+          )}
 
           <div className="mb-3">
             <label htmlFor="address" className="form-label">
