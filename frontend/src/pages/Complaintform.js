@@ -24,10 +24,11 @@ const Complaintform = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [voicedescription, setVoiceDescription] = useState("");
   const [error, setError] = useState(null);
+
+
   const [coordinates]=useState()
   const complaintCategories = ["Roads and Footpath"];
 
-  // const complaintCategories = ["Roads and Footpath"];
 
   const subCategoriesMap = {
     "Roads and Footpath": [
