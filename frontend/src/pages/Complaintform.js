@@ -34,7 +34,7 @@ const Complaintform = () => {
 
 
  
-  const complaintCategories = ["Roads and Footpath"];
+  // const complaintCategories = ["Roads and Footpath"];
 
   const subCategoriesMap = {
     "Roads and Footpath": [

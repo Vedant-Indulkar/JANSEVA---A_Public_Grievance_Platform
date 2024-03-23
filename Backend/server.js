@@ -5,7 +5,9 @@ const complaintRoutes = require('./routes/complaints');
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 const cors = require('cors');
+const dotenv = require('dotenv');
 
+dotenv.config();
 //express app
 const app = express();
 
@@ -22,10 +24,10 @@ app.use((req,res, next) => {
 })
 
 //db connection
-const dbURI='mongodb+srv://aditichavan118:aditi11@janseva-db.ayc1eiq.mongodb.net/ComplaintPlatform?retryWrites=true&w=majority'
+const dbURI= process.env.DB_URI;
 
 mongoose.connect(dbURI)
-  .then(result => app.listen(4000, () => {
+  .then(result => app.listen(4000 , () => {
     console.log('connected to db and listening to port 4000');
   }))
   .catch(err => console.log(err));
