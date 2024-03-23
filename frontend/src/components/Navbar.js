@@ -172,7 +172,8 @@ export default function CustomNavbar() {
             height="55"
             className="d-inline-block align-top mx-2"
           />
-          <h2 className="mb-0 ml-2">JANSEVA</h2>
+           <h2 className="mb-0 ml-2" ><b>𝐉𝐀𝐍𝐒𝐄𝐕𝐀</b></h2>
+          
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
