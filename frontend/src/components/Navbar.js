@@ -115,6 +115,7 @@ export default function CustomNavbar() {
   const { logout } = useLogout();
   const { user } = useAuthContext();
   const navigate = useNavigate();
+  
 
   // const googleTranslateElementInit = () => {
   //   new window.google.translate.TranslateElement(

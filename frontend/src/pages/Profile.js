@@ -86,7 +86,7 @@ const Profile = () => {
         </div>
         <div className="complaintlist">
           <div className="complaints">
-            {filteredComplaints && filteredComplaints.map((complaint) => (
+            {filteredComplaints && filteredComplaints?.map((complaint) => (
               <div key={complaint._id}>
                 <Complaintdetails complaint={complaint} />
               </div>

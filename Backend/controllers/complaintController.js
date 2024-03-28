@@ -8,8 +8,6 @@ const getAllComplaints = async (req, res) => {
   res.status(200).json(complaints);
 };
 
-
-
 const upvoteComplaint = async (req, res) => {
   const postId = req.params.id; // Assuming complaint ID is in the URL params
   const userId = req.user._id;
@@ -39,7 +37,6 @@ const upvoteComplaint = async (req, res) => {
   }
 };
 
-
 //get all complaints
 const getComplaints = async (req, res) => {
   const user_id = req.user._id;
@@ -67,7 +64,13 @@ const createComplaint = async (req, res) => {
   const { category, sub_category, description, ward_no, location, image_url, phoneNumber } =
     req.body;
 
-  const image = await uploadOnCloudinary(image_url);
+  let image;
+  if (image_url) {
+    image = await uploadOnCloudinary(image_url);
+    if (!image || !image.secure_url) {
+      return res.status(400).json({ error: "Failed to upload image" });
+    }
+  }
 
   //add doc to db
   try {
@@ -77,11 +80,10 @@ const createComplaint = async (req, res) => {
       sub_category,
       description,
       ward_no,
-      image_url: image.secure_url || "",
+      image_url: image ? image.secure_url : "", // Check if image exists before accessing secure_url
       phoneNumber,
       location,
       user_id,
-      // useremail
     });
 
     res.status(200).json(complaint);
