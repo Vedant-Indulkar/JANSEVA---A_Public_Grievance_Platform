@@ -61,16 +61,7 @@ const getComplaint = async (req, res) => {
 
 //create new complaint
 const createComplaint = async (req, res) => {
-  const { category, sub_category, description, ward_no, location, image_url, phoneNumber } =
-    req.body;
-
-  let image;
-  if (image_url) {
-    image = await uploadOnCloudinary(image_url);
-    if (!image || !image.secure_url) {
-      return res.status(400).json({ error: "Failed to upload image" });
-    }
-  }
+  const { category, sub_category, description, ward_no, location, image_url, phoneNumber, latitude, longitude, hospitalCount, schoolCount } = req.body;
 
   //add doc to db
   try {
@@ -80,9 +71,13 @@ const createComplaint = async (req, res) => {
       sub_category,
       description,
       ward_no,
-      image_url: image ? image.secure_url : "", // Check if image exists before accessing secure_url
+      image_url,
       phoneNumber,
-      location,
+      address:location,
+      latitude,
+      longitude,
+      hospitalCount,
+      schoolCount,
       user_id,
     });
 
@@ -91,6 +86,7 @@ const createComplaint = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 //delete a complaint
 const deleteComplaint = async (req, res) => {

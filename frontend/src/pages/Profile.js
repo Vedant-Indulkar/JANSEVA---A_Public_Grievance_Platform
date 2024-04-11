@@ -55,29 +55,29 @@ const Profile = () => {
       <Navbar />
       <div className="container mt-5">
         <div className="d-flex justify-content-between align-items-center">
-          <h2>Welcome to the Dashboard</h2>
+          <h2> <strong>Welcome to the Dashboard</strong></h2>
           {/* Filter buttons */}
           <ButtonGroup>
             <Button
-              variant={complaintStatusFilter !== 'ALL' ? 'outlined' : 'primary'}
+              variant={complaintStatusFilter !== 'ALL' ? 'outline-dark' : 'dark'}
               onClick={() => handleFilter('ALL')}
             >
               All
             </Button>
             <Button
-              variant={complaintStatusFilter !== 'PENDING' ? 'outlined' : 'primary'}
+              variant={complaintStatusFilter !== 'PENDING' ? 'outline-dark' : 'dark'}
               onClick={() => handleFilter('PENDING')}
             >
               Pending
             </Button>
             <Button
-              variant={complaintStatusFilter !== 'IN PROGRESS' ? 'outlined' : 'primary'}
+              variant={complaintStatusFilter !== 'IN PROGRESS' ? 'outline-dark' : 'dark'}
               onClick={() => handleFilter('IN PROGRESS')}
             >
               In Progress
             </Button>
             <Button
-              variant={complaintStatusFilter !== 'COMPLETED' ? 'outlined' : 'primary'}
+              variant={complaintStatusFilter !== 'COMPLETED' ? 'outline-dark' : 'dark'}
               onClick={() => handleFilter('COMPLETED')}
             >
               Completed
@@ -86,7 +86,7 @@ const Profile = () => {
         </div>
         <div className="complaintlist">
           <div className="complaints">
-            {filteredComplaints && filteredComplaints?.map((complaint) => (
+            {filteredComplaints && filteredComplaints.map((complaint) => (
               <div key={complaint._id}>
                 <Complaintdetails complaint={complaint} />
               </div>

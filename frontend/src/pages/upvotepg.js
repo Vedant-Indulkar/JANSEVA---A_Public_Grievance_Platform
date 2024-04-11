@@ -129,7 +129,7 @@ const ComplaintsList = () => {
                   <div className="card-body">
                     <h5 className="card-title">{complaint.category}</h5>
                     <p className="card-text">{complaint.description}</p>
-                    <p className="card-text">Address : {complaint.location}</p>
+                    <p className="card-text">Address : {complaint.address}</p>
                     <p className="card-text">
                       <small className="text-muted">
                         Posted {formatTimeAgo(complaint.createdAt)}

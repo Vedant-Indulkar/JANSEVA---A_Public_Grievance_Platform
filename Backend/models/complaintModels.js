@@ -30,8 +30,28 @@ const complaintsSchema = new Schema(
 
     location: {
       type: String,
+    },
+    latitude: {
+      type: Number,
+      
+    },
+    longitude: {
+      type: Number,
+      
+    },
+    hospitalCount: {
+      type: Number,
+      default: 0,
+    },
+    schoolCount: {
+      type: Number,
+      default: 0,
+    },
+    address: {
+      type: String,
       required: true,
     },
+
     phoneNumber : {
       type: Number,
       required: true

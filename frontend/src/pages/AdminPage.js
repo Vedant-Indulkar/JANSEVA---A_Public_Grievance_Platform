@@ -155,7 +155,7 @@ const AdminPage = () => {
           })
           .map((complaint, index) => (
             <tr key={complaint.id}>
-              <td>{index + 1}</td>
+              {/* <td>{index + 1}</td> */}
               <td>{"C"+(index+1)}</td>
              
               <td>{complaint.user_id.email}</td>
@@ -186,7 +186,7 @@ const AdminPage = () => {
                 </div>
               </td>
               <td>{complaint.ward_no}</td>
-              <td>{complaint.location}</td>
+              <td>{complaint.address}</td>
               <td>
                 {complaint.assignee ? (
                   <>
@@ -300,7 +300,7 @@ const AdminPage = () => {
           </select>
         </div>
         <div
-          className="table-responsive"
+          className="table-responsive mb-2"
           style={{ maxHeight: "70vh", overflowY: "auto" }}
         >
           <table className="table table-bordered table-hover">
@@ -309,11 +309,11 @@ const AdminPage = () => {
                 <th>Sr. No.</th>
                 <th>Complainant's Email</th>
                 <th>Complainant's Phone Number</th>
-                <th>Complaint ID</th>
+                {/* <th>Complaint ID</th> */}
                 <th>Priority</th>
                 <th>Complaint Type</th>
                 <th>Sub-type</th>
-                <th>Citizen UID</th>
+                {/* <th>Citizen UID</th> */}
                 <th>Description</th>
                 <th>Sector No.</th>
                 <th>Address</th>

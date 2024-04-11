@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { useComplaintsContext } from "../hooks/useComplaintsContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import MapWithGeocoding from "../components/MapWithGeocoding"; // Import MapWithGeocoding component
 
 const Complaintform = () => {
   const navigate = useNavigate();
@@ -19,8 +20,13 @@ const Complaintform = () => {
   const [location, setLocation] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState(null);
+  // Define hospitalCount, schoolCount, selectedLatitude, and selectedLongitude states
+  const [hospitalCount, setHospitalCount] = useState(0);
+  const [schoolCount, setSchoolCount] = useState(0);
+  const [selectedLatitude, setSelectedLatitude] = useState(null);
+  const [selectedLongitude, setSelectedLongitude] = useState(null);
 
-  const complaintCategories = ["Roads and Footpath"];
+   const complaintCategories = ["Roads and Footpath"];
   const subCategoriesMap = {
     "Roads and Footpath": [
       "Damaged Road",
@@ -35,14 +41,12 @@ const Complaintform = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(imageDataUri)
 
     if (!user) {
       setError("You must be logged in");
       return;
     }
 
-    // Handle form submission logic here (e.g., send data to server)
     const complaint = {
       category,
       sub_category,
@@ -51,38 +55,34 @@ const Complaintform = () => {
       image_url: imageDataUri,
       location,
       phoneNumber,
+      submissionDateTime: new Date().toISOString(),
+      hospitalCount,
+      schoolCount,
+      latitude: selectedLatitude,
+      longitude: selectedLongitude
     };
 
-    const response = await fetch("/complaints", {
-      method: "POST",
-      body: JSON.stringify(complaint),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
+    try {
+      const response = await fetch("/complaints", {
+        method: "POST",
+        body: JSON.stringify(complaint),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
 
-    const json = await response.json();
+      if (!response.ok) {
+        throw new Error("Failed to submit complaint");
+      }
 
-    if (!response.ok) {
-      setError(json.error);
-    }
-    if (response.ok) {
-      setError(null);
-      setCategory("");
-      setSubCategory("");
-      setDescription("");
-      setWardNo("");
-      setImageDataUri("");
-      setLocation("");
-      setPhoneNumber("");
-      console.log("new complaint added:", json);
-
+      const json = await response.json();
       dispatch({ type: "CREATE_WORKOUT", payload: json });
       navigate("/Profile");
+    } catch (error) {
+      setError(error.message);
     }
   };
-
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -95,12 +95,15 @@ const Complaintform = () => {
     };
     reader.readAsDataURL(file);
   };
+
   return (
     <>
       <Navbar />
       <div className="container mt-5">
         <h2 className="mb-4">Complaint Form</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={handleSubmit}>
+          {/* Complaint category select */}
           <div className="mb-3">
             <label htmlFor="category" className="form-label">
               Complaint Category:
@@ -124,6 +127,7 @@ const Complaintform = () => {
             </select>
           </div>
 
+          {/* Complaint sub-category select */}
           {category && (
             <div className="mb-3">
               <label htmlFor="subCategory" className="form-label">
@@ -149,6 +153,7 @@ const Complaintform = () => {
             </div>
           )}
 
+          {/* Complaint description textarea */}
           <div className="mb-3">
             <label htmlFor="description" className="form-label">
               Complaint Description:
@@ -163,6 +168,7 @@ const Complaintform = () => {
             ></textarea>
           </div>
 
+          {/* Ward number select */}
           <div className="mb-3">
             <label htmlFor="wardNo" className="form-label">
               Ward Number:
@@ -186,6 +192,7 @@ const Complaintform = () => {
             </select>
           </div>
 
+          {/* Image upload */}
           <div className="mb-3">
             <label htmlFor="image" className="form-label">
               Upload Image:
@@ -193,15 +200,14 @@ const Complaintform = () => {
             <input
               type="file"
               id="image"
-              name="image"
+              name={imageDataUri}
               accept="image/*"
-              onChange={(e) => {
-                handleImageUpload(e);
-              }}
+              onChange={handleImageUpload}
               className="form-control"
             />
           </div>
 
+          {/* Address textarea */}
           <div className="mb-3">
             <label htmlFor="address" className="form-label">
               Address:
@@ -215,7 +221,13 @@ const Complaintform = () => {
               required
             ></textarea>
           </div>
-          
+
+          <div>       
+        {/* MapWithGeocoding component */}
+        <MapWithGeocoding />
+      </div>
+
+          {/* Phone number input */}
           <div className="mb-3">
             <label htmlFor="phoneNumber" className="form-label">
               Phone Number:
@@ -227,7 +239,7 @@ const Complaintform = () => {
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               className="form-control"
-              pattern="[0-9]{10}" // Pattern for 10-digit numbers
+              pattern="[0-9]{10}"
               title="Please enter a 10-digit phone number"
               required
             />
@@ -238,6 +250,8 @@ const Complaintform = () => {
             Submit Complaint
           </button>
         </form>
+
+         
       </div>
     </>
   );
