@@ -53,14 +53,29 @@ const MapWithGeocoding = () => {
 
     geocoder.geocode({ 'address': address }, (results, status) => {
       if (status === 'OK') {
-        map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 14,
-          center: results[0].geometry.location,
+        const location = results[0].geometry.location;
+
+        if (!map) {
+          // Initialize map if it's not already
+          map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: location,
+          });
+        } else {
+          // Set center if map is already initialized
+          map.setCenter(location);
+        }
+
+        // Add marker for chosen location with green icon
+        const userChosenMarker = new google.maps.Marker({
+          position: location,
+          map: map,
+          icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
         });
 
         setLocationSelected(true);
 
-        performNearbySearch(results[0].geometry.location, ['hospital', 'school', 'university', 'college']);
+        performNearbySearch(location, ['hospital', 'school', 'university', 'train_station']);
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
       }
@@ -71,15 +86,16 @@ const MapWithGeocoding = () => {
     const google = window.google;
     const service = new google.maps.places.PlacesService(map);
 
-    // Initialize counts for hospitals and educational institutions
+    // Initialize counts for hospitals, schools, and railway stations
     let hospitalCount = 0;
     let schoolCount = 0;
+    let trainStationCount = 0;
 
     types.forEach(type => {
       const request = {
         location: location,
         radius: '500',
-        type: [type],
+        type: type,
       };
 
       service.nearbySearch(request, (results, status) => {
@@ -91,19 +107,21 @@ const MapWithGeocoding = () => {
             // Increment counts based on place type
             if (type === 'hospital') {
               hospitalCount++;
-            } else if (type === 'school' || type === 'university' || type === 'college') {
+            } else if (type === 'school' || type === 'university') {
               schoolCount++;
+            } else if (type === 'train_station') {
+              trainStationCount++;
             }
           });
 
-          // If both hospitals and schools are present, draw a single circle
-          if (hospitalCount > 0 && schoolCount > 0) {
+          // If all types are present, draw a single circle
+          if (hospitalCount > 0 && schoolCount > 0 || trainStationCount > 0) {
             const circle = new google.maps.Circle({
               strokeColor: "#FF0000",
-              strokeOpacity: 0.5,
+              strokeOpacity: 0.10,
               strokeWeight: 2,
               fillColor: "#FF0000",
-              fillOpacity: 0.35,
+              fillOpacity: 0.20,
               map: map,
               center: location,
               radius: 500 // 500 meters radius
@@ -123,12 +141,14 @@ const MapWithGeocoding = () => {
         iconUrl = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
         break;
       case 'school':
-      case 'college':
       case 'university':
         iconUrl = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
         break;
-      default:
+      case 'train_station':
         iconUrl = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+        break;
+      default:
+        iconUrl = 'http://maps.google.com/mapfiles/ms/icons/black-dot.png';
     }
 
     // Create marker with icon
