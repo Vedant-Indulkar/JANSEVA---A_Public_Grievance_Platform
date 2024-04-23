@@ -87,9 +87,11 @@ export default function Carousels() {
               src="images/img1.1.jpeg"
               alt="First slide"
             />
-            <Carousel.Caption className="text-black">
-              <h2><u><b>JANSEVA</b></u></h2>
-              <h5>A Grievance Platform</h5>
+            <Carousel.Caption className="text-black mb-5">
+            <div className="caption-content mb-5">
+        <h2 ><u><b>JANSEVA</b></u></h2>
+        <h5>A Grievance Platform</h5>
+      </div>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>
