@@ -39,11 +39,11 @@ const complaintsSchema = new Schema(
       type: Number,
       
     },
-    hospitalCount: {
+    hospitalsCount: {
       type: Number,
       default: 0,
     },
-    schoolCount: {
+    schoolsCollegesCount: {
       type: Number,
       default: 0,
     },

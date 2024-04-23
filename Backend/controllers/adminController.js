@@ -38,9 +38,7 @@ const updateComplaintStatus = async (req, res) => {
     // Save the updated complaint
     await complaint.save();
 
-
     // send email to user
-    
 
     res.status(200).json(complaint);
   } catch (error) {
@@ -48,9 +46,7 @@ const updateComplaintStatus = async (req, res) => {
   }
 };
 
-//get status
-// const getStatus
-
+// Assign a worker to a complaint
 const assignWorkerToAComplaint = async (req, res) => {
   const { complaintId } = req.params;
   const { assignee } = req.body;

@@ -1,4 +1,4 @@
-﻿category,Sector,Location,hospitalCount,schoolCount,upvotes,time,Priority
+﻿category,Sector,Location,hospitalsCount,schoolsCollegesCount,upvotes,time,Priority
 water supply,1,"19.16397, 72.99564",18,24,32,10:24:00,1
 water supply,1,"19.165711, 72.998405",12,23,21,14:47:00,3
 street light,2,"19.162421, 72.997580",20,26,9,06:15:00,3

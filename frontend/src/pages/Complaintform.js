@@ -21,22 +21,58 @@ const Complaintform = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState(null);
   // Define hospitalCount, schoolCount, selectedLatitude, and selectedLongitude states
-  const [hospitalCount, setHospitalCount] = useState(0);
-  const [schoolCount, setSchoolCount] = useState(0);
+  const [hospitalsCount, setHospitalCount] = useState(0);
+  const [schoolsCollegesCount , setSchoolCount] = useState(0);
   const [selectedLatitude, setSelectedLatitude] = useState(null);
   const [selectedLongitude, setSelectedLongitude] = useState(null);
 
-   const complaintCategories = ["Roads and Footpath"];
-  const subCategoriesMap = {
+   const complaintCategories = ["water supply", "Roads and Footpath", "street light", "public parks and gardens", "garbage and cleanliness"];
+   const subCategoriesMap = {
+    "water supply": [
+      "Insufficient supply duration",
+      "Impure/Contaminated water",
+      "Pipeline leakage",
+      "Supply not received",
+      "Repairing of Standpost/Handpump",
+      "Other"
+    ],
     "Roads and Footpath": [
       "Damaged Road",
-      "Damaged Footpath",
+      "Damaged Footpath", 
       "Damaged Road Divider",
-      "No marking on Bump",
       "Marking no proper on Bump",
       "Marking no proper on Zebra Crossing",
+      "Other"
     ],
-  };
+    "street light": [
+      "Insufficient lighting",
+      "Street light not working",
+      "Street light pole collapsed",
+      "Street Light working in day time not proper",
+      "Other"
+    ],
+    "public parks and gardens": [
+      "Cleanliness in garden not proper",
+      "Trimming of Trees in public garden/road/divider/plots (except private properties)", 
+      "Repairing of Benches/Water Hut/water line/Walk Way/Playing Equipments/Dust Bin/Gate/sinage board/etc.",
+      "Nuisance of mosquito/insect due to tree/bushes",
+      "Weeding of unwanted plants/bushes on road side/footpath/open plot/creek/etc.",
+      "Use of garden for games/yoga/prohibited drinks",
+      "Regarding stray dogs in garden",
+      "Other"
+    ],
+    "garbage and cleanliness": [
+      "Cleaning/Scraping not carried out/not proper",
+      "Container/Dustbin not lifted/not cleaned properly",
+      "Lifting of building materials", 
+      "Hawkers not maintaining cleanliness",
+      "Improper disposal of hotel/restaurant wastes",
+      "Burning Of Garbage In Open Space",
+      "Other"
+    ]
+  }
+   
+  
   const wardNumbers = ["Ward 1", "Ward 2", "Ward 3"];
 
   const handleSubmit = async (e) => {
@@ -56,8 +92,8 @@ const Complaintform = () => {
       location,
       phoneNumber,
       submissionDateTime: new Date().toISOString(),
-      hospitalCount,
-      schoolCount,
+      hospitalsCount,
+      schoolsCollegesCount ,
       latitude: selectedLatitude,
       longitude: selectedLongitude
     };
@@ -82,6 +118,8 @@ const Complaintform = () => {
     } catch (error) {
       setError(error.message);
     }
+
+    
   };
 
   const handleImageUpload = (event) => {
@@ -207,7 +245,7 @@ const Complaintform = () => {
             />
           </div>
 
-          {/* Address textarea */}
+          {/* Address textarea
           <div className="mb-3">
             <label htmlFor="address" className="form-label">
               Address:
@@ -220,11 +258,23 @@ const Complaintform = () => {
               className="form-control"
               required
             ></textarea>
-          </div>
+          </div> */}
 
           <div>       
         {/* MapWithGeocoding component */}
-        <MapWithGeocoding />
+        <MapWithGeocoding 
+          onLocationSelect={(latitude, longitude, hospitalsCount, schoolsCollegesCount ) => {
+            setSelectedLatitude(latitude);
+            setSelectedLongitude(longitude);
+            setHospitalCount(hospitalsCount);
+            setSchoolCount(schoolsCollegesCount );
+
+          }}
+          address={location}
+          setAddress={setLocation}
+          // hospitalsCount={hospitalsCount}
+          // schoolsCollegesCount ={schoolsCollegesCount }
+        />
       </div>
 
           {/* Phone number input */}

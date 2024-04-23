@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-const MapWithGeocoding = () => {
-  const [address, setAddress] = useState('Airoli, Navimumbai');
+const MapWithGeocoding = ({ onLocationSelect, address, setAddress }) => {
+  // const [address, setAddress] = useState('');
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [selectedMarker, setSelectedMarker] = useState(null);
   const [locationSelected, setLocationSelected] = useState(false);
   let map;
 
@@ -33,9 +32,7 @@ const MapWithGeocoding = () => {
       if (!locationSelected) {
         geocoder.geocode({ 'location': newMarker.getPosition() }, function (results, status) {
           if (status === 'OK') {
-            if (results[0]) {
-              setAddress(results[0].formatted_address);
-            }
+            setAddress(results[0].formatted_address);
           } else {
             console.error('Cannot determine address at this location.');
           }
@@ -43,37 +40,49 @@ const MapWithGeocoding = () => {
       }
     });
 
-    setSelectedMarker(newMarker);
     setMapLoaded(true);
   };
 
   const codeAddress = () => {
     const google = window.google;
     const geocoder = new google.maps.Geocoder();
-
+  
     geocoder.geocode({ 'address': address }, (results, status) => {
       if (status === 'OK') {
+        const location = results[0].geometry.location;
+  
         map = new google.maps.Map(document.getElementById('map'), {
           zoom: 14,
-          center: results[0].geometry.location,
+          center: location,
         });
-
+  
         setLocationSelected(true);
 
-        performNearbySearch(results[0].geometry.location, ['hospital', 'school', 'university', 'college']);
+           // Create a circle with a red background color around the selected location
+      const circle = new google.maps.Circle({
+        map: map,
+        radius: 500, // 500 meters radius
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        strokeWeight: 0,
+        center: location
+      });
+
+  
+        performNearbySearch(location);
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
       }
     });
   };
 
-  const performNearbySearch = (location, types) => {
+  const performNearbySearch = (location) => {
     const google = window.google;
     const service = new google.maps.places.PlacesService(map);
 
-    // Initialize counts for hospitals and educational institutions
-    let hospitalCount = 0;
-    let schoolCount = 0;
+    const types = ['hospital', 'school', 'university', 'college'];
+    let hospitalsCount = 0;
+    let schoolsCollegesCount = 0;
 
     types.forEach(type => {
       const request = {
@@ -85,34 +94,24 @@ const MapWithGeocoding = () => {
       service.nearbySearch(request, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && results) {
           results.forEach(place => {
-            // Create marker for each place
             createMarker(place, type);
-
-            // Increment counts based on place type
-            if (type === 'hospital') {
-              hospitalCount++;
-            } else if (type === 'school' || type === 'university' || type === 'college') {
-              schoolCount++;
-            }
           });
 
-          // If both hospitals and schools are present, draw a single circle
-          if (hospitalCount > 0 && schoolCount > 0) {
-            const circle = new google.maps.Circle({
-              strokeColor: "#FF0000",
-              strokeOpacity: 0.5,
-              strokeWeight: 2,
-              fillColor: "#FF0000",
-              fillOpacity: 0.35,
-              map: map,
-              center: location,
-              radius: 500 // 500 meters radius
-            });
+          // Update counts based on place types and pass them to the parent component
+          if (type === 'hospital') {
+            hospitalsCount += results.length;
+          } else if (['school', 'university', 'college'].includes(type)) {
+            schoolsCollegesCount += results.length;
           }
+        }
+
+        if (type === 'college') {
+          onLocationSelect(location.lat(), location.lng(), hospitalsCount, schoolsCollegesCount);
         }
       });
     });
   };
+
 
   const createMarker = (place, type) => {
     const google = window.google;
@@ -131,7 +130,6 @@ const MapWithGeocoding = () => {
         iconUrl = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
     }
 
-    // Create marker with icon
     const marker = new google.maps.Marker({
       position: place.geometry.location,
       map: map,
