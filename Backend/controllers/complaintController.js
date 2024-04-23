@@ -61,7 +61,7 @@ const getComplaint = async (req, res) => {
 
 //create new complaint
 const createComplaint = async (req, res) => {
-  const { category, sub_category, description, ward_no, location, image_url, phoneNumber, latitude, longitude, hospitalCount, schoolCount } = req.body;
+  const { category, sub_category, description, ward_no, location, image_url, phoneNumber, latitude, longitude, hospitalsCount, schoolsCollegesCount } = req.body;
 
   //add doc to db
   try {
@@ -76,8 +76,8 @@ const createComplaint = async (req, res) => {
       address:location,
       latitude,
       longitude,
-      hospitalCount,
-      schoolCount,
+      hospitalsCount,
+      schoolsCollegesCount,
       user_id,
     });
 

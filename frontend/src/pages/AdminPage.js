@@ -30,16 +30,48 @@ const AdminPage = () => {
         });
         const json = await response.json();
         if (response.ok) {
-          setComplaints(json);
+          // Predict priority for each complaint
+          const complaintsWithPriority = await Promise.all(
+            json.map(async (complaint) => {
+              const priorityResponse = await axios.post(
+                "http://127.0.0.1:5000/predict-priority",
+                {
+                  category: complaint.category,
+                  hospitalsCount: complaint.hospitalsCount,
+                  schoolsCollegesCount: complaint.schoolsCollegesCount,
+                  upvotes: complaint.upvotes.length,
+                  time: formatTime(complaint.createdAt), // Include other features if needed
+                }
+              );
+              console.log(priorityResponse.data )
+              const priority = priorityResponse.data.predictedPriority;
+              return { ...complaint, priority };
+            })
+          );
+          setComplaints(complaintsWithPriority);
+          console.log(complaintsWithPriority);
         }
       } catch (error) {
         console.error("Error fetching complaints:", error);
       }
     };
-
     fetchComplaints();
   }, []);
 
+  function formatTime(dateString) {
+    // Parse the date string into a Date object
+    const date = new Date(dateString);
+
+    // Extract hours, minutes, and seconds from the Date object
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+
+    // Formatted time string in HH:mm:ss format
+    const formattedTime = `${hours}:${minutes}:${seconds}`;
+    
+    return formattedTime;
+}
   const handleStatusChange = async (complaintId, status) => {
     try {
       const response = await axios.patch(
@@ -187,6 +219,10 @@ const AdminPage = () => {
               </td>
               <td>{complaint.ward_no}</td>
               <td>{complaint.address}</td>
+              <td>{complaint.hospitalsCount}</td>
+              <td>{complaint.schoolsCollegesCount}</td>
+              
+              <td>{complaint.upvotes.length}</td>
               <td>
                 {complaint.assignee ? (
                   <>
@@ -317,6 +353,9 @@ const AdminPage = () => {
                 <th>Description</th>
                 <th>Sector No.</th>
                 <th>Address</th>
+                <th>Hospitals Count</th>
+                <th>Schools,Colleges Count</th>
+                <th>Upvotes</th>
                 <th>Assigned to</th>
                 <th>Status</th>
               </tr>
@@ -354,4 +393,3 @@ const handleAssignUser = async (
 };
 
 export default AdminPage;
-
