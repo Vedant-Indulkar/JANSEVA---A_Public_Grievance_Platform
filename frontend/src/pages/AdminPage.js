@@ -200,6 +200,13 @@ const AdminPage = () => {
               <td>{complaint.category}</td>
               <td>{complaint.sub_category}</td>
               <td>
+                <img
+                  src={complaint.image_url}
+                  style={{ width: "150px", height: "150px", objectFit: "cover" }}
+                  alt="Complaint"
+                />
+                </td>
+              <td>
                 <div className="d-flex align-items-center">
                   <div style={{ flex: 1 }}>
                     {complaint.description.length > 50 ? (
@@ -362,6 +369,7 @@ const AdminPage = () => {
                                     <th>Priority</th>
                                     <th>Complaint Type</th>
                                     <th>Sub-type</th>
+                                    <th>Image</th>
                                     <th>Description</th>
                                     <th>Sector No.</th>
                                     <th>Address</th>
