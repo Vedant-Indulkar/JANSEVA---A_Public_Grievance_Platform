@@ -65,10 +65,11 @@ const ComplaintsList = () => {
 
   const handleUpvote = async (id) => {
     try {
-      const response = await axios.post(`/complaints/${id}/upvote`, null, {
+      const response = await fetch (`/complaints/${id}/upvote`,{
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
+        method : "POST"
       });
   
       // Update local state to reflect the upvote

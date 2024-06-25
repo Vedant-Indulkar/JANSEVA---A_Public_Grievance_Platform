@@ -73,7 +73,7 @@ const Complaintform = () => {
   }
    
   
-  const wardNumbers = ["Ward 1", "Ward 2", "Ward 3"];
+  const wardNumbers = ["Ward 1", "Ward 2", "Ward 3","Ward 4", "Ward 5"];
 
   const handleSubmit = async (e) => {
     e.preventDefault();

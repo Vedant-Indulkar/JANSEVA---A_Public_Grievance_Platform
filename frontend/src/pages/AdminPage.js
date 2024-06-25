@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../components/Navbar";
-// import { useNavigate } from "react-router-dom";
-// import { useAuthContext } from "../hooks/useAuthContext";
-import { Modal, Form, Button, ButtonGroup } from "react-bootstrap";
+import { Modal, Form, Button, ButtonGroup, Spinner } from "react-bootstrap";
 import { workerNames } from "../constants/names";
 import axios from "axios";
 import { IoIosRemoveCircle } from "react-icons/io";
@@ -14,10 +12,7 @@ const AdminPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedComplaintId, setSelectedComplaintId] = useState("");
   const [complaintStatusFilter, setComplaintStatusFilter] = useState("");
-
-  // const { user } = useAuthContext();
-
-  // const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchComplaints = async () => {
@@ -30,48 +25,53 @@ const AdminPage = () => {
         });
         const json = await response.json();
         if (response.ok) {
-          // Predict priority for each complaint
           const complaintsWithPriority = await Promise.all(
             json.map(async (complaint) => {
-              const priorityResponse = await axios.post(
-                "http://127.0.0.1:5000/predict-priority",
-                {
-                  category: complaint.category,
-                  hospitalsCount: complaint.hospitalsCount,
-                  schoolsCollegesCount: complaint.schoolsCollegesCount,
-                  upvotes: complaint.upvotes.length,
-                  time: formatTime(complaint.createdAt), // Include other features if needed
-                }
-              );
-              console.log(priorityResponse.data )
-              const priority = priorityResponse.data.predictedPriority;
-              return { ...complaint, priority };
+              try {
+                const priorityResponse = await axios.post(
+                  "http://127.0.0.1:5000/predict-priority",
+                  {
+                    category: complaint.category,
+                    hospitalsCount: complaint.hospitalsCount,
+                    schoolsCollegesCount: complaint.schoolsCollegesCount,
+                    upvotes: complaint.upvotes.length,
+                    time: formatTime(complaint.createdAt),
+                  }
+                );
+                const priority = priorityResponse.data.predictedPriority;
+                return { ...complaint, priority };
+              } catch (priorityError) {
+                console.error("Error predicting priority:", priorityError);
+                return { ...complaint, priority: 3 };
+              }
             })
           );
           setComplaints(complaintsWithPriority);
+          setLoading(false);
           console.log(complaintsWithPriority);
         }
       } catch (error) {
         console.error("Error fetching complaints:", error);
+        setLoading(false);
       }
     };
     fetchComplaints();
   }, []);
 
   function formatTime(dateString) {
-    // Parse the date string into a Date object
     const date = new Date(dateString);
-
-    // Extract hours, minutes, and seconds from the Date object
     const hours = date.getHours().toString().padStart(2, "0");
     const minutes = date.getMinutes().toString().padStart(2, "0");
     const seconds = date.getSeconds().toString().padStart(2, "0");
-
-    // Formatted time string in HH:mm:ss format
     const formattedTime = `${hours}:${minutes}:${seconds}`;
-    
     return formattedTime;
-}
+  }
+
+  function formatDate(dateString) {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+
   const handleStatusChange = async (complaintId, status) => {
     try {
       const response = await axios.patch(
@@ -85,8 +85,7 @@ const AdminPage = () => {
       ];
       setComplaints(Array.from([...newComplaints]));
     } catch (error) {
-      // Handle error
-      console.error("Error:", error.response.data); // Log error response or do something else
+      console.error("Error:", error.response.data);
     }
   };
 
@@ -125,9 +124,9 @@ const AdminPage = () => {
           >
             <option>Assign to</option>
             {workerNames.map((el) => (
-              <>
-                <option value={el}>{el}</option>
-              </>
+              <option key={el} value={el}>
+                {el}
+              </option>
             ))}
           </Form.Select>
           <Button
@@ -180,22 +179,26 @@ const AdminPage = () => {
                 return complaint.status === "PENDING" && categoryFilter;
               case "IN PROGRESS":
                 return complaint.status === "IN PROGRESS" && categoryFilter;
-
               default:
                 return categoryFilter;
             }
           })
           .map((complaint, index) => (
-            <tr key={complaint.id}>
-              {/* <td>{index + 1}</td> */}
-              <td>{"C"+(index+1)}</td>
-             
+            <tr key={complaint._id}>
+              <td>{"C" + (index + 1)}</td>
+              <td>{formatDate(complaint.createdAt)}</td> {/* Add this line */}
               <td>{complaint.user_id.email}</td>
               <td>{String(complaint.phoneNumber)}</td>
-              <td>{complaint.priority}</td>
+              <td
+                style={{
+                  backgroundColor: complaint.priority === 1 ? "rgb(255, 46, 55)" : "inherit",
+                  color: complaint.priority === 1 ? "white" : "inherit",
+                }}
+              >
+                {complaint.priority}
+              </td>
               <td>{complaint.category}</td>
               <td>{complaint.sub_category}</td>
-
               <td>
                 <div className="d-flex align-items-center">
                   <div style={{ flex: 1 }}>
@@ -221,7 +224,6 @@ const AdminPage = () => {
               <td>{complaint.address}</td>
               <td>{complaint.hospitalsCount}</td>
               <td>{complaint.schoolsCollegesCount}</td>
-              
               <td>{complaint.upvotes.length}</td>
               <td>
                 {complaint.assignee ? (
@@ -240,16 +242,14 @@ const AdminPage = () => {
                     />
                   </>
                 ) : (
-                  <>
-                    <button
-                      onClick={() => {
-                        setSelectedComplaintId(complaint._id);
-                        setShowAssignModal(true);
-                      }}
-                    >
-                      Assign
-                    </button>
-                  </>
+                  <button
+                    onClick={() => {
+                      setSelectedComplaintId(complaint._id);
+                      setShowAssignModal(true);
+                    }}
+                  >
+                    Assign
+                  </button>
                 )}
               </td>
               <td>
@@ -264,7 +264,6 @@ const AdminPage = () => {
                   <option value="IN PROGRESS">In Progress</option>
                 </select>
                 <button className="my-2 btn-primary">Submit</button>
-               
               </td>
             </tr>
           ))}
@@ -281,115 +280,131 @@ const AdminPage = () => {
         <h2 className="mb-4">
           <strong>Welcome Admin!</strong>
         </h2>
-        <ButtonGroup>
-          <Button
-            variant={complaintStatusFilter !== "ALL" ? "outlined": "primary"}
-            onClick={() => {
-              setComplaintStatusFilter("ALL");
-            }}
-          >
-            All
-          </Button>
-          <Button
-            variant={
-              complaintStatusFilter !== "PENDING" ? "outlined" : "primary"
-            }
-            onClick={() => {
-              setComplaintStatusFilter("PENDING");
-            }}
-          >
-            Pending
-          </Button>
-          <Button
-            variant={
-              complaintStatusFilter !== "IN PROGRESS" ? "outlined" : "primary"
-            }
-            onClick={() => {
-              setComplaintStatusFilter("IN PROGRESS");
-            }}
-          >
-            In Progress
-          </Button>
-          <Button
-            variant={
-              complaintStatusFilter !== "COMPLETED" ? "outlined" : "primary"
-            }
-            onClick={() => {
-              setComplaintStatusFilter("COMPLETED");
-            }}
-          >
-            Completed
-          </Button>
-        </ButtonGroup>
-        <div className="mb-3">
-          <select
-            className="form-select"
-            aria-label="Select complaint category"
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-          >
-            <option value="">All Complaints</option>
-            <option value="Road">Road</option>
-            <option value="Electricity">Electricity</option>
-            <option value="Water">Water</option>
-            {/* Add more options as needed */}
-          </select>
-        </div>
-        <div
-          className="table-responsive mb-2"
-          style={{ maxHeight: "70vh", overflowY: "auto" }}
-        >
-          <table className="table table-bordered table-hover">
-            <thead className="table-dark">
-              <tr>
-                <th>Sr. No.</th>
-                <th>Complainant's Email</th>
-                <th>Complainant's Phone Number</th>
-                {/* <th>Complaint ID</th> */}
-                <th>Priority</th>
-                <th>Complaint Type</th>
-                <th>Sub-type</th>
-                {/* <th>Citizen UID</th> */}
-                <th>Description</th>
-                <th>Sector No.</th>
-                <th>Address</th>
-                <th>Hospitals Count</th>
-                <th>Schools,Colleges Count</th>
-                <th>Upvotes</th>
-                <th>Assigned to</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>{renderComplaintsByCategory()}</tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const handleAssignUser = async (
-  complaintId,
-  complaints,
-  setComplaints,
-  assignee
-) => {
-  try {
-    const response = await axios.patch(
-      `http://localhost:4000/admin/complaints/${complaintId}/assign`,
-      { assignee }
-    );
-
-    console.log(response.data);
-    let newComplaints = [
-      ...complaints.filter((el) => el._id !== complaintId),
-      response.data,
-    ];
-    setComplaints(Array.from([...newComplaints]));
-  } catch (error) {
-    // Handle error
-    console.error("Error:", error.response.data); // Log error response or do something else
-  }
-};
-
-export default AdminPage;
+        {loading ? (
+          <div className="d-flex justify-content-center align-items-center" style={{ height: "60vh" }}>
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        ) : (
+          <>
+            <ButtonGroup>
+              <Button
+                                variant={complaintStatusFilter !== "ALL" ? "outlined" : "primary"}
+                                onClick={() => {
+                                  setComplaintStatusFilter("ALL");
+                                }}
+                              >
+                                All
+                              </Button>
+                              <Button
+                                variant={
+                                  complaintStatusFilter !== "PENDING" ? "outlined" : "primary"
+                                }
+                                onClick={() => {
+                                  setComplaintStatusFilter("PENDING");
+                                }}
+                              >
+                                Pending
+                              </Button>
+                              <Button
+                                variant={
+                                  complaintStatusFilter !== "IN PROGRESS" ? "outlined" : "primary"
+                                }
+                                onClick={() => {
+                                  setComplaintStatusFilter("IN PROGRESS");
+                                }}
+                              >
+                                In Progress
+                              </Button>
+                              <Button
+                                variant={
+                                  complaintStatusFilter !== "COMPLETED" ? "outlined" : "primary"
+                                }
+                                onClick={() => {
+                                  setComplaintStatusFilter("COMPLETED");
+                                }}
+                              >
+                                Completed
+                              </Button>
+                            </ButtonGroup>
+                            <div className="mb-3">
+                              <select
+                                className="form-select"
+                                aria-label="Select complaint category"
+                                value={selectedCategory}
+                                onChange={handleCategoryChange}
+                              >
+                                <option value="">All Complaints</option>
+                                <option value="water supply">water supply</option>
+                                <option value="Roads and Footpath">Roads and Footpath</option>
+                                <option value="street light">street light</option>
+                                <option value="public parks and gardens">
+                                  public parks and gardens
+                                </option>
+                                <option value="garbage and cleanliness">
+                                  garbage and cleanliness
+                                </option>
+                                {/* Add more options as needed */}
+                              </select>
+                            </div>
+                            <div
+                              className="table-responsive mb-2"
+                              style={{ maxHeight: "70vh", overflowY: "auto" }}
+                            >
+                              <table className="table table-bordered table-hover">
+                                <thead className="table-dark">
+                                  <tr>
+                                    <th>Sr. No.</th>
+                                    <th>Grievance  Date</th> {/* Add this line */}
+                                    <th>Complainant's Email</th>
+                                    <th>Complainant's Phone Number</th>
+                                    <th>Priority</th>
+                                    <th>Complaint Type</th>
+                                    <th>Sub-type</th>
+                                    <th>Description</th>
+                                    <th>Sector No.</th>
+                                    <th>Address</th>
+                                    <th>Hospitals Count</th>
+                                    <th>Schools,Colleges Count</th>
+                                    <th>Upvotes</th>
+                                    <th>Assigned to</th>
+                                    <th>Status</th>
+                                  </tr>
+                                </thead>
+                                <tbody>{renderComplaintsByCategory()}</tbody>
+                              </table>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                };
+                
+                const handleAssignUser = async (
+                  complaintId,
+                  complaints,
+                  setComplaints,
+                  assignee
+                ) => {
+                  try {
+                    const response = await axios.patch(
+                      `http://localhost:4000/admin/complaints/${complaintId}/assign`,
+                      { assignee }
+                    );
+                
+                    console.log(response.data);
+                    let newComplaints = [
+                      ...complaints.filter((el) => el._id !== complaintId),
+                      response.data,
+                    ];
+                    setComplaints(Array.from([...newComplaints]));
+                  } catch (error) {
+                    // Handle error
+                    console.error("Error:", error.response.data); // Log error response or do something else
+                  }
+                };
+                
+                export default AdminPage;
+                

@@ -89,7 +89,7 @@ export default function Carousels() {
             />
             <Carousel.Caption className="text-black mb-5">
             <div className="caption-content mb-5">
-        <h2 ><u><b>JANSEVA</b></u></h2>
+        <h2 ><u><b>𝐉𝐀𝐍𝐒𝐄𝐕𝐀</b></u></h2>
         <h5>A Grievance Platform</h5>
       </div>
             </Carousel.Caption>
